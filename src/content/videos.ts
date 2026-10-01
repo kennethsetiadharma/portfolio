@@ -17,9 +17,9 @@ export type VideoProject = VideoBase &
 // Placeholder entries: replace with real edits.
 export const videos: VideoProject[] = [
   {
-    title: "Video One",
+    title: "SFU Kendo - Mask Off",
     thumbnail: "/images/videos/video-one.jpg",
-    youtubeId: "dQw4w9WgXcQ",
+    youtubeId: "-GYLVULkIys",
   },
   {
     title: "Video Two",

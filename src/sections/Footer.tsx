@@ -13,6 +13,12 @@ export function Footer() {
           {site.contact}
         </a>
         <SocialLinks />
+        <a
+          href={site.links.email}
+          className="text-lg text-muted-foreground transition-colors hover:text-foreground"
+        >
+          {site.email}
+        </a>
       </Reveal>
       <p className="text-sm text-muted-foreground">
         © {new Date().getFullYear()} {site.name}

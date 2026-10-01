@@ -10,9 +10,12 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
+// Not used on the page yet, so don't preload it (it would compete with Geist
+// Sans for bandwidth). It still loads on demand if something uses `font-mono`.
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {

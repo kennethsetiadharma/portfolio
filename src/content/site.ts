@@ -1,13 +1,17 @@
 // Personal details shown across the page.
 // Edit this file to change your name, intro, links, about text, or nav: no component changes needed.
 
+const email = "kenneth.setiadharma@gmail.com";
+
 export const site = {
-  name: "Your Name",
+  name: "Kenneth Setiadharma",
   intro: "CS student building things for the web.",
+  /** Shown as text in the footer; the mailto link below is built from it. */
+  email,
   links: {
-    github: "https://github.com/",
-    linkedin: "https://www.linkedin.com/",
-    email: "mailto:you@example.com",
+    github: "https://github.com/kennethsetiadharma",
+    linkedin: "https://www.linkedin.com/in/kenneth-setiadharma-812826289/",
+    email: `mailto:${email}`,
     resume: "/resume.pdf",
   },
   nav: [
@@ -16,7 +20,7 @@ export const site = {
     { label: "Videos", href: "#videos" },
   ],
   about: {
-    photo: "/images/me.jpg",
+    photo: "/images/kenneth.JPG",
     photoAlt: "Portrait of Your Name",
     text: [
       "I'm a computer science student who likes building clean, fast things for the web.",

@@ -23,7 +23,7 @@ Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`
 - [x] 6. Code Projects (#work): ProjectCard grid, click-to-open preview dialog
 - [x] 7. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
 - [x] 8. Footer: contact line + SocialLinks
-- [ ] 9. Polish pass: Playwright desktop/mobile screenshots, reduced-motion, Lighthouse
+- [x] 9. Polish pass: Playwright desktop/mobile screenshots, reduced-motion, Lighthouse
 
 ## Stack
 
@@ -58,7 +58,7 @@ src/
   content/          site.ts (name, intro, links, about, nav), projects.ts, videos.ts
   hooks/            client hooks
 public/videos/      code-project preview clips + posters, local video-project mp4s
-public/images/      me.jpg, video-project thumbnails (images/videos/)
+public/images/      your portrait (path set in site.about.photo), video-project thumbnails (images/videos/)
 ```
 
 ## Content convention

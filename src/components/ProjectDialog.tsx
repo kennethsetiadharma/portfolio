@@ -5,6 +5,7 @@ import { Expand, Play } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import {
   Dialog,
+  DialogCloseButton,
   DialogContent,
   DialogDescription,
   DialogTitle,
@@ -32,7 +33,7 @@ export function ProjectDialog({ project }: { project: Project }) {
         Icon={video ? Play : Expand}
       />
 
-      <DialogContent>
+      <DialogContent overlayClose={false}>
         <div className="aspect-video bg-black">
           {video ? (
             <video
@@ -60,7 +61,10 @@ export function ProjectDialog({ project }: { project: Project }) {
         </div>
         <div className="space-y-4 p-6 md:p-8">
           <div className="space-y-2">
-            <DialogTitle>{title}</DialogTitle>
+            <div className="flex items-center justify-between gap-4">
+              <DialogTitle>{title}</DialogTitle>
+              <DialogCloseButton className="shrink-0" />
+            </div>
             <DialogDescription>{description}</DialogDescription>
           </div>
           <ProjectTags tags={tags} />

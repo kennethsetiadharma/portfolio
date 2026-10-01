@@ -1,7 +1,12 @@
 "use client";
 
 import { Play } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogCloseButton,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ThumbTrigger } from "@/components/ThumbTrigger";
 import { VideoPlayer } from "@/components/VideoPlayer";
 import type { VideoProject } from "@/content/videos";
@@ -23,14 +28,15 @@ export function VideoCard({ video }: { video: VideoProject }) {
       />
       <p className="mt-4 text-lg font-medium tracking-tight">{title}</p>
 
-      {/* The X sits in the title bar, not over the player: embeds like YouTube
-          put their own controls in the top-right corner. */}
-      <DialogContent closeClassName="top-auto right-6 bottom-[1.375rem] md:right-8 md:bottom-[1.875rem]">
+      {/* The X sits in the title row, not over the player: embeds put their own
+          controls in the top-right corner. */}
+      <DialogContent overlayClose={false}>
         <div className="aspect-video bg-black">
           <VideoPlayer video={video} />
         </div>
-        <div className="p-6 md:p-8">
+        <div className="flex items-center justify-between gap-4 p-6 md:p-8">
           <DialogTitle>{title}</DialogTitle>
+          <DialogCloseButton className="shrink-0" />
         </div>
       </DialogContent>
     </Dialog>
