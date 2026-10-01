@@ -1,26 +1,31 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { useMediaQuery } from "./use-media-query";
 
-// 3D only renders on wider screens for users who haven't asked for reduced motion.
-const QUERY = "(min-width: 768px) and (prefers-reduced-motion: no-preference)";
-
-function subscribe(onChange: () => void) {
-  const mql = window.matchMedia(QUERY);
-  mql.addEventListener("change", onChange);
-  return () => mql.removeEventListener("change", onChange);
+// Checked once, then cached: creating a WebGL context isn't free. The test
+// context is released straight away so it doesn't count against the browser's limit.
+let webglSupported: boolean | undefined;
+function hasWebGL() {
+  if (webglSupported === undefined) {
+    try {
+      const canvas = document.createElement("canvas");
+      const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+      webglSupported = !!gl;
+      gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    } catch {
+      webglSupported = false;
+    }
+  }
+  return webglSupported;
 }
 
-function getSnapshot() {
-  return window.matchMedia(QUERY).matches;
-}
+const noSubscribe = () => () => {};
 
-// The server can't know the screen size, so it always renders the fallback.
-// React then swaps to the real value on the client without a hydration mismatch.
-function getServerSnapshot() {
-  return false;
-}
-
+// The 3D die runs on every screen size, except for visitors who ask for reduced
+// motion or whose browser has no WebGL. They keep the static HeroFallback.
 export function useCanRender3D() {
-  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const motionOk = useMediaQuery("(prefers-reduced-motion: no-preference)");
+  const webgl = useSyncExternalStore(noSubscribe, hasWebGL, () => false);
+  return motionOk && webgl;
 }

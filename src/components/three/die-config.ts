@@ -11,8 +11,10 @@ export const DIE = {
     6: "#8a4dff", // violet
   } as Record<number, string>,
 
-  /** Path of the K shape. Swap public/k.svg to change the letter (fallback uses it too). */
+  /** Path of the K shape for the 3D die (extruded chrome). Swap public/k.svg to change that letter. */
   kSvg: "/k.svg",
+  /** The coloured K logo shown as the static die (first paint, reduced motion, no WebGL). */
+  staticLogo: "/images/k-logo.svg",
   /** Height of the K in die units (a die is 2 wide). */
   kHeight: 0.62,
 

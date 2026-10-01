@@ -73,13 +73,13 @@ Use the Playwright MCP server to screenshot the running site after any UI change
 src/
   app/              routes: layout.tsx, page.tsx, globals.css
   components/ui/    shadcn-style components (button, dialog)
-  components/three/ 3D: HeroCanvas (gate + lazy load), HeroScene (R3F + motion), Die (model), die-config, HeroVisual (scroll), HeroFallback
+  components/three/ 3D: HeroCanvas (static-first, lazy load, crossfade, fallbacks), HeroScene (R3F, motion, PerformanceMonitor), Die (model), die-config, HeroVisual (scroll), HeroFallback (static K logo), HeroErrorBoundary
   components/motion/ MotionProvider, Reveal, Stagger
   components/icons/ brand SVG icons (lucide v1 has no GitHub/LinkedIn)
   components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, ProjectDialog, ProjectMeta, ThumbTrigger, VideoCard, VideoPlayer
   sections/         Hero, About, Projects, Videos, Footer (Server Components, map over content)
   content/          site.ts (name, intro, location, email, links, about, nav), projects.ts, videos.ts
-  hooks/            client hooks
+  hooks/            client hooks: use-can-render-3d (reduced motion + WebGL), use-media-query, use-idle
 public/videos/      code-project preview clips + posters, local video-project mp4s
 public/images/      your portrait (path set in site.about.photo), video-project thumbnails (images/videos/)
 ```
@@ -102,7 +102,8 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 - Nav: floating pill shape.
 - Buttons: dark, rounded.
 - One 3D hero object: a chrome die. The 1-face shows an extruded K loaded from `public/k.svg`; the other faces have recessed pips. Only one 3D object. Tweak it in `src/components/three/die-config.ts`.
-- Colour: neutral greys plus 1–2 vibrant accents max. The one exception is the hero die's six tinted-chrome faces (colours live in `die-config.ts`); nothing else on the page may add colours. The accent is `--brand` (`bg-brand`, `text-brand`). Don't confuse it with shadcn's `accent`, which is a subtle hover background.
+- The static stand-in for the die (first paint, reduced motion, no WebGL, slow devices) is the gradient K logo `public/images/k-logo.svg` (`DIE.staticLogo`), shown on its own with no tile or shadow. It is a hand-traced vector of the logo PNG: a clip-path outline filled with a small embedded colour field. To change it, replace that file (keep it roughly square) or point `staticLogo` at a new one.
+- Colour: neutral greys plus 1–2 vibrant accents max. The exceptions are the hero die's six tinted-chrome faces (colours live in `die-config.ts`) and the purple-to-orange K logo shown as the static die; nothing else on the page may add colours. The accent is `--brand` (`bg-brand`, `text-brand`). Don't confuse it with shadcn's `accent`, which is a subtle hover background.
 - Use the reference sites (butter.video, landonorris.com) for vibe only. Don't copy them.
 
 ## Animation
@@ -115,10 +116,14 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 ## 3D and performance
 
 - The canvas is lazy-loaded with `next/dynamic` (`ssr: false`) inside `HeroCanvas`, so three.js is a separate chunk.
-- `useCanRender3D` gates it: below 768px or with `prefers-reduced-motion: reduce`, only `HeroFallback` renders and three.js is never downloaded.
+- The 3D die runs on **every screen size, phones included**. `useCanRender3D` only turns it off for `prefers-reduced-motion: reduce` or when the browser has no WebGL; those visitors keep the static `HeroFallback` and three.js is never downloaded.
+- The static die (`HeroFallback`) always renders first. `HeroCanvas` waits for an idle moment (`useIdle`) before importing three.js, then crossfades to the canvas once `HeroScene` reports its first frames (`onReady`). It falls back to the static die again if the scene throws (`HeroErrorBoundary`), the WebGL context is lost, or the device can't keep up (below).
 - Lighting comes from drei `<Environment>` + `<Lightformer>`s defined in code. Don't use HDR presets that fetch files from a CDN.
-- Keep `dpr={[1, 2]}` on the Canvas.
+- Pixel density: keep `dpr` as a `[min, max]` tuple (not a number, which would force that density even on 1x screens). Max is 2 on desktop and **1.5 on touch/small screens** (`dprMax` from `HeroCanvas`).
+- Adaptive quality: drei `PerformanceMonitor` (in `HeroScene`) starts 1.5 s after the first frame, steps quality down in 0.25 steps when FPS stays below its lower bound (this lowers the dpr cap toward 1), and if FPS is *still* low at the floor, `HeroScene` calls `onFail` and the static die returns for the rest of the visit. It is unmounted while the canvas is paused so a paused loop isn't read as 0 fps.
+- Touch: `touch-action: pan-y` on the hero visual so vertical swipes scroll the page; tap rolls the die to the K face; cursor tilt ignores `pointerType: "touch"`. The die's scale fits the canvas width (`viewport.width / 3.9`, max 1.4) so it never clips on a 390px screen.
 - The render loop pauses (`frameloop="never"`) whenever the hero is off-screen, via `useInView` in `HeroCanvas`. Don't remove it: an off-screen die otherwise keeps burning CPU/GPU.
+- Testing the 3D in headless Playwright: it renders on a software GPU, so slow frames can trip the performance monitor and bring back the static die after ~15 s. Take screenshots early, and use a busy-loop in the page (e.g. 30 ms per frame) to test the slow-device path. Real-phone testing is done by hand.
 - Project preview clips must be muted, short, compressed, and always have a poster. The video-project lightbox player (mp4) has controls and sound, since the viewer clicked play, and still gets a poster.
 - Project cards show a static poster. The demo clip only mounts (and downloads) inside the click-to-open dialog, where it plays muted and looping; with reduced motion it shows controls instead of autoplaying.
 - YouTube iframes load only after a click, from `youtube-nocookie.com`. Never render an iframe on page load.
@@ -136,5 +141,5 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 - Thumbnails (projects and videos) are static; hover shows a zoom and a badge (always visible on touch), and a **click** opens the lightbox. Nothing opens on hover.
 - Dialogs (`ui/dialog.tsx`): the close X goes in the title row (`DialogCloseButton` with `overlayClose={false}`), never over the media, because players put controls in the top-right. The close button takes initial focus so Esc still works when an iframe is present.
 - The hero headline is `clamp(3rem, 9.5vw, 9rem)` so the full name fits on one line on desktop and the whole hero (name, intro, location, email, icons) stays above the fold from 1024×768 up. Re-check this if the name or intro changes.
-- Lighthouse on a production build: mobile 99 / 100 / 100 / 100; desktop performance 81, because the three.js chunk blocks the main thread for about 400 ms (inflated by software WebGL in headless Chrome). Geist Mono has `preload: false` so it doesn't compete with Geist Sans. Lighthouse was run with `npx` from a temp folder and is **not** a project dependency.
+- Lighthouse on a production build: mobile with the 3D enabled 95 / 100 / 100 / 100 (LCP 1.4 s, total blocking time 260 ms from three.js starting after idle; it was 99 / TBT 10 ms when phones got only the static die); desktop performance 81, because the three.js chunk blocks the main thread for about 400 ms (inflated by software WebGL in headless Chrome). Geist Mono has `preload: false` so it doesn't compete with Geist Sans. Lighthouse was run with `npx` from a temp folder and is **not** a project dependency.
 - Playwright screenshots can time out while a video is playing or the 3D canvas is busy; pause the video and pass a longer `timeout`. Navigating to the same URL with only a different `#hash` doesn't reload the page, so go through `about:blank` first.
