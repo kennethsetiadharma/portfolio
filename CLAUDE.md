@@ -12,7 +12,7 @@ Single-page personal portfolio for a CS student. Recruiters must find the projec
 
 ## Page structure & build order
 
-Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`) → Video Projects (`#videos`) → Footer, with a floating pill nav linking to About / Work / Videos, and a back-to-top button that appears after the hero. Tick items off as they ship.
+Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`) → Video Projects (`#videos`) → Footer, with a floating pill nav: a home icon (scrolls to top) followed by About / Work / Videos. Tick items off as they ship.
 
 - [x] 0. Foundation: stack, content files, lazy 3D pipeline
 - [x] 1. Content types + placeholder data (projects.ts, videos.ts, site.ts) + placeholder media
@@ -22,7 +22,7 @@ Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`
 - [x] 5. About (#about): photo + 2–3 sentences
 - [x] 6. Code Projects (#work): ProjectCard grid, click-to-open preview dialog
 - [x] 7. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
-- [ ] 8. Footer: contact line + SocialLinks
+- [x] 8. Footer: contact line + SocialLinks
 - [ ] 9. Polish pass: Playwright desktop/mobile screenshots, reduced-motion, Lighthouse
 
 ## Stack
@@ -53,7 +53,7 @@ src/
   components/three/ 3D: HeroCanvas (gate + lazy load), HeroScene (R3F + motion), Die (model), die-config, HeroVisual (scroll), HeroFallback
   components/motion/ MotionProvider, Reveal, Stagger
   components/icons/ brand SVG icons (lucide v1 has no GitHub/LinkedIn)
-  components/       shared leaves: Nav, Section, SocialLinks, BackToTop, ProjectCard, ProjectDialog, ProjectMeta, ThumbTrigger, VideoCard, VideoPlayer
+  components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, ProjectDialog, ProjectMeta, ThumbTrigger, VideoCard, VideoPlayer
   sections/         Hero, About, Projects, Videos, Footer (Server Components, map over content)
   content/          site.ts (name, intro, links, about, nav), projects.ts, videos.ts
   hooks/            client hooks

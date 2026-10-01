@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { BackToTop } from "@/components/BackToTop";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Nav } from "@/components/Nav";
 import { site } from "@/content/site";
@@ -30,7 +29,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <MotionProvider>
           <Nav />
-          <BackToTop />
           {children}
         </MotionProvider>
       </body>
