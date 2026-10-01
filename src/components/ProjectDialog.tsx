@@ -8,9 +8,9 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { ProjectLinks, ProjectTags } from "@/components/ProjectMeta";
+import { ThumbTrigger } from "@/components/ThumbTrigger";
 import type { Project } from "@/content/projects";
 
 // The card thumbnail is a static poster. Clicking it opens a focused lightbox
@@ -19,27 +19,18 @@ import type { Project } from "@/content/projects";
 export function ProjectDialog({ project }: { project: Project }) {
   const { title, description, tags, video, poster, github, live } = project;
   const reduceMotion = useReducedMotion();
-  const BadgeIcon = video ? Play : Expand;
 
   return (
     <Dialog>
-      <DialogTrigger
-        aria-label={`Open ${title}`}
-        className="group relative block aspect-[16/10] w-full cursor-pointer overflow-hidden rounded-2xl bg-muted text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-      >
-        <Image
-          src={poster}
-          alt=""
-          width={1280}
-          height={800}
-          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-          className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-        />
-        {/* Hover/focus cue. Always visible on touch screens, which have no hover. */}
-        <span className="absolute right-3 bottom-3 flex size-10 translate-y-1 items-center justify-center rounded-full bg-black/75 text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 pointer-coarse:translate-y-0 pointer-coarse:opacity-100 motion-reduce:transition-none">
-          <BadgeIcon className="size-4" />
-        </span>
-      </DialogTrigger>
+      <ThumbTrigger
+        label={`Open ${title}`}
+        poster={poster}
+        width={1280}
+        height={800}
+        aspectClass="aspect-[16/10]"
+        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+        Icon={video ? Play : Expand}
+      />
 
       <DialogContent>
         <div className="aspect-video bg-black">

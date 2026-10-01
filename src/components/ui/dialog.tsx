@@ -2,6 +2,7 @@
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { XIcon } from "lucide-react";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 function Dialog(props: DialogPrimitive.Root.Props) {
@@ -21,9 +22,14 @@ function DialogTrigger({ className, ...props }: DialogPrimitive.Trigger.Props) {
 // Centered modal over a blurred backdrop. Closes on Esc, outside click, or the X.
 function DialogContent({
   className,
+  closeClassName,
   children,
   ...props
-}: DialogPrimitive.Popup.Props) {
+}: DialogPrimitive.Popup.Props & { closeClassName?: string }) {
+  // Focus the close button on open, not the first focusable thing. Otherwise a
+  // YouTube iframe grabs focus and Esc would go to it instead of closing the dialog.
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   return (
     <DialogPrimitive.Portal>
       <DialogPrimitive.Backdrop
@@ -32,6 +38,7 @@ function DialogContent({
       />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
+        initialFocus={closeRef}
         className={cn(
           "fixed top-1/2 left-1/2 z-[60] max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-4xl -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-background shadow-2xl outline-none transition duration-200 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 motion-reduce:transition-none",
           className,
@@ -40,8 +47,12 @@ function DialogContent({
       >
         {children}
         <DialogPrimitive.Close
+          ref={closeRef}
           aria-label="Close"
-          className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-black/70 text-white outline-none transition-colors hover:bg-black focus-visible:ring-3 focus-visible:ring-white/60"
+          className={cn(
+            "absolute top-3 right-3 flex size-9 items-center justify-center rounded-full bg-black/70 text-white outline-none transition-colors hover:bg-black focus-visible:ring-3 focus-visible:ring-white/60",
+            closeClassName,
+          )}
         >
           <XIcon className="size-4" />
         </DialogPrimitive.Close>
