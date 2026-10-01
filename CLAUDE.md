@@ -71,9 +71,9 @@ Use the Playwright MCP server to screenshot the running site after any UI change
 
 ```
 src/
-  app/              routes: layout.tsx, page.tsx, globals.css
+  app/              routes: layout.tsx, page.tsx, globals.css; dev/die-snapshot (dev-only, 404 in production)
   components/ui/    shadcn-style components (button, dialog)
-  components/three/ 3D: HeroCanvas (static-first, lazy load, crossfade, fallbacks), HeroScene (R3F, motion, PerformanceMonitor), Die (model), die-config, HeroVisual (scroll), HeroFallback (static K logo), HeroErrorBoundary
+  components/three/ 3D: HeroCanvas (static-first, lazy load, crossfade, fallbacks), HeroScene (R3F, motion, PerformanceMonitor), Die (model), DieEnvironment (shared lighting), die-config, HeroVisual (scroll), HeroFallback (static die image), HeroErrorBoundary, DieSnapshot (dev-only exporter)
   components/motion/ MotionProvider, Reveal, Stagger
   components/icons/ brand SVG icons (lucide v1 has no GitHub/LinkedIn)
   components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, ProjectDialog, ProjectMeta, ThumbTrigger, VideoCard, VideoPlayer
@@ -102,8 +102,8 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 - Nav: floating pill shape.
 - Buttons: dark, rounded.
 - One 3D hero object: a chrome die. The 1-face shows an extruded K loaded from `public/k.svg`; the other faces have recessed pips. Only one 3D object. Tweak it in `src/components/three/die-config.ts`.
-- The static stand-in for the die (first paint, reduced motion, no WebGL, slow devices) is the gradient K logo `public/images/k-logo.svg` (`DIE.staticLogo`), shown on its own with no tile or shadow. It is a hand-traced vector of the logo PNG: a clip-path outline filled with a small embedded colour field. To change it, replace that file (keep it roughly square) or point `staticLogo` at a new one.
-- Colour: neutral greys plus 1–2 vibrant accents max. The exceptions are the hero die's six tinted-chrome faces (colours live in `die-config.ts`) and the purple-to-orange K logo shown as the static die; nothing else on the page may add colours. The accent is `--brand` (`bg-brand`, `text-brand`). Don't confuse it with shadcn's `accent`, which is a subtle hover background.
+- The static stand-in for the die (first paint, reduced motion, no WebGL, slow devices) is a **still render of the real die** at its rest pose (K-forward): `public/images/die-static.webp`, shown by `HeroFallback` with no tile or shadow. It is sized with CSS container units so it lines up with the live 3D die at every size (verified to within about 0.5 px on desktop and 3 px on a 390px phone), which makes the swap to 3D seamless. **Regenerate it whenever the die changes** (colours, K, pips, rest pose, lights, camera or fit): run `npm run dev`, open `/dev/die-snapshot` (a dev-only page; it 404s in production), click Download, and save the file over `public/images/die-static.webp`. The page crops the centre square of side `DIE.staticDie.frame` x the canvas height; if it warns that the die touches the edge, raise `frame`. `public/images/k-logo.svg` (the gradient K logo traced from the user's PNG) is kept but unused, e.g. for a favicon.
+- Colour: neutral greys plus 1–2 vibrant accents max. The one exception is the hero die's six tinted-chrome faces (colours live in `die-config.ts`), which also appear in the static die image; nothing else on the page may add colours. The accent is `--brand` (`bg-brand`, `text-brand`). Don't confuse it with shadcn's `accent`, which is a subtle hover background.
 - Use the reference sites (butter.video, landonorris.com) for vibe only. Don't copy them.
 
 ## Animation
@@ -141,5 +141,5 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 - Thumbnails (projects and videos) are static; hover shows a zoom and a badge (always visible on touch), and a **click** opens the lightbox. Nothing opens on hover.
 - Dialogs (`ui/dialog.tsx`): the close X goes in the title row (`DialogCloseButton` with `overlayClose={false}`), never over the media, because players put controls in the top-right. The close button takes initial focus so Esc still works when an iframe is present.
 - The hero headline is `clamp(3rem, 9.5vw, 9rem)` so the full name fits on one line on desktop and the whole hero (name, intro, location, email, icons) stays above the fold from 1024×768 up. Re-check this if the name or intro changes.
-- Lighthouse on a production build: mobile with the 3D enabled 95 / 100 / 100 / 100 (LCP 1.4 s, total blocking time 260 ms from three.js starting after idle; it was 99 / TBT 10 ms when phones got only the static die); desktop performance 81, because the three.js chunk blocks the main thread for about 400 ms (inflated by software WebGL in headless Chrome). Geist Mono has `preload: false` so it doesn't compete with Geist Sans. Lighthouse was run with `npx` from a temp folder and is **not** a project dependency.
+- Lighthouse on a production build: mobile with the 3D enabled and the static die image 95 / 100 / 100 / 100 (LCP 1.8 s, total blocking time about 230 ms from three.js starting after idle; it was 99 / TBT 10 ms when phones got only a static image). The static die image is the LCP element, so `HeroFallback` keeps `fetchPriority="high"` on it: without it LCP was 2.6 s; desktop performance 81, because the three.js chunk blocks the main thread for about 400 ms (inflated by software WebGL in headless Chrome). Geist Mono has `preload: false` so it doesn't compete with Geist Sans. Lighthouse was run with `npx` from a temp folder and is **not** a project dependency.
 - Playwright screenshots can time out while a video is playing or the 3D canvas is busy; pause the video and pass a longer `timeout`. Navigating to the same URL with only a different `#hash` doesn't reload the page, so go through `about:blank` first.

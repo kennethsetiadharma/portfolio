@@ -13,8 +13,19 @@ export const DIE = {
 
   /** Path of the K shape for the 3D die (extruded chrome). Swap public/k.svg to change that letter. */
   kSvg: "/k.svg",
-  /** The coloured K logo shown as the static die (first paint, reduced motion, no WebGL). */
-  staticLogo: "/images/k-logo.svg",
+  /**
+   * The static die image (first paint, reduced motion, no WebGL, slow devices): a render of
+   * the real die at its rest pose. Regenerate it at /dev/die-snapshot (npm run dev) whenever
+   * the die's colours, K, pips, rest pose or lighting change.
+   * `frame` = the image's side as a fraction of the canvas height at the snapshot scale;
+   * HeroFallback uses it to size the image so it lines up with the live 3D die.
+   */
+  staticDie: { src: "/images/die-static.webp", size: 900, frame: 0.9 },
+
+  /** Camera for the hero canvas and the snapshot page (they must match). */
+  camera: { z: 7, fov: 40 },
+  /** The die's on-screen size: scale = min(max, canvasWidthInWorldUnits / widthUnits). */
+  fit: { max: 1.4, widthUnits: 3.9 },
   /** Height of the K in die units (a die is 2 wide). */
   kHeight: 0.62,
 

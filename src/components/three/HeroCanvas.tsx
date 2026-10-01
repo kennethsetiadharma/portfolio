@@ -14,12 +14,11 @@ import { HeroFallback } from "./HeroFallback";
 // actually rendered. ssr: false because WebGL only exists in the browser.
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 
-// The logo leaves quickly (fade + slight shrink) and the 3D arrives just after, so the
-// two very different shapes barely overlap on screen.
-const OUT =
-  "transition-[opacity,scale] duration-300 ease-out motion-reduce:transition-none";
-const IN =
-  "transition-opacity duration-500 delay-150 motion-reduce:transition-none";
+// The still die and the 3D die show the same pose in the same place, so the hand-off is: fade
+// the 3D in on top (IN), keep the still fully opaque underneath until that's done, then drop
+// it quickly. No dip in the middle. If the 3D later fails, the still comes straight back.
+const STILL = "transition-opacity ease-out motion-reduce:transition-none";
+const IN = "transition-opacity duration-500 motion-reduce:transition-none";
 
 export function HeroCanvas({
   className,
@@ -52,11 +51,23 @@ export function HeroCanvas({
 
   return (
     // touch-pan-y: vertical swipes over the die scroll the page as normal.
-    <div ref={box} className={cn("relative touch-pan-y", className)}>
+    <div
+      ref={box}
+      className={cn("relative touch-pan-y", className)}
+      // Makes this box a size container, so HeroFallback can size the still die from the
+      // box's own width and height (cqw / cqh). Safe: the box has an explicit size.
+      style={{ containerType: "size" }}
+    >
       {/* Static die: what you see first, and what stays for reduced motion, no WebGL,
           or if the device can't keep up. It fades out once the canvas is ready. */}
       <div
-        className={cn("absolute inset-0", OUT, ready && "scale-95 opacity-0")}
+        className={cn(
+          "absolute inset-0",
+          STILL,
+          ready
+            ? "opacity-0 delay-500 duration-100"
+            : "opacity-100 duration-200",
+        )}
       >
         <HeroFallback />
       </div>

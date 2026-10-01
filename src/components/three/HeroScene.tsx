@@ -2,19 +2,13 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import {
-  Environment,
-  Lightformer,
-  PerformanceMonitor,
-} from "@react-three/drei";
+import { PerformanceMonitor } from "@react-three/drei";
 import type { MotionValue } from "motion/react";
 import { Euler, MathUtils, Quaternion, Vector3 } from "three";
 import type { Group } from "three";
 import { Die } from "./Die";
+import { DieEnvironment } from "./DieEnvironment";
 import { DIE } from "./die-config";
-
-// Matches --brand in globals.css. Shows up as a coloured reflection in the chrome.
-const ACCENT = "#a3f53b";
 
 const REST = new Quaternion().setFromEuler(new Euler(...DIE.restRotation));
 const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
@@ -26,9 +20,9 @@ type Phase = "idle" | "roll" | "hold";
 function DieRig({ progress }: { progress?: MotionValue<number> }) {
   // Size the die to the canvas so a tumbling corner (the die is ~3.5 units across
   // corner to corner, at scale 1) never clips on a narrow phone screen. `viewport`
-  // is the canvas size in world units; 3.9 leaves roughly 10% of breathing room.
+  // is the canvas size in world units; `DIE.fit.widthUnits` leaves roughly 10% of breathing room.
   const viewportWidth = useThree((state) => state.viewport.width);
-  const fit = Math.min(1.4, viewportWidth / 3.9);
+  const fit = Math.min(DIE.fit.max, viewportWidth / DIE.fit.widthUnits);
   const tilt = useRef<Group>(null); // outer: mouse tilt
   const body = useRef<Group>(null); // inner: the die's orientation
   const pointer = useRef({ x: 0, y: 0 });
@@ -201,7 +195,7 @@ export default function HeroScene({
       frameloop={paused ? "never" : "always"}
       // pan-y: vertical swipes over the die scroll the page instead of being swallowed.
       style={{ touchAction: "pan-y" }}
-      camera={{ position: [0, 0, 7], fov: 40 }}
+      camera={{ position: [0, 0, DIE.camera.z], fov: DIE.camera.fov }}
       onCreated={({ gl }) => {
         // The OS can take the WebGL context away (e.g. low memory): show the static die.
         gl.domElement.addEventListener("webglcontextlost", (e) => {
@@ -236,55 +230,7 @@ export default function HeroScene({
           onChange={(api) => setQuality(api.factor)}
         />
       )}
-      {/* Chrome is only as interesting as what it reflects. This builds a
-          studio-style environment from glowing panels in code, so no HDR
-          image is downloaded. The dark backdrop gives the chrome contrast;
-          a light one makes it look like flat grey plastic. */}
-      <Environment resolution={256}>
-        <color attach="background" args={["#333333"]} />
-        <Lightformer
-          form="rect"
-          intensity={5}
-          position={[0, 5, -2]}
-          scale={[10, 2, 1]}
-        />
-        <Lightformer
-          form="rect"
-          intensity={2}
-          position={[0, 0, 6]}
-          scale={[6, 4, 1]}
-        />
-        <Lightformer
-          form="rect"
-          intensity={3}
-          position={[-5, 1, 1]}
-          rotation-y={Math.PI / 2}
-          scale={[10, 1, 1]}
-        />
-        <Lightformer
-          form="rect"
-          intensity={3}
-          position={[5, -1, 1]}
-          rotation-y={-Math.PI / 2}
-          scale={[10, 1, 1]}
-        />
-        {/* Aimed so the K face, at its resting tilt, reflects a bright panel
-            (otherwise it mirrors the dark backdrop and looks black). */}
-        <Lightformer
-          form="rect"
-          intensity={3}
-          position={[-3.3, -2.2, 4.6]}
-          scale={[5, 4, 1]}
-        />
-        <Lightformer
-          form="rect"
-          color={ACCENT}
-          intensity={8}
-          position={[0, -5, 2]}
-          rotation-x={Math.PI / 2}
-          scale={[10, 3, 1]}
-        />
-      </Environment>
+      <DieEnvironment />
     </Canvas>
   );
 }
