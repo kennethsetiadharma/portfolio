@@ -32,7 +32,8 @@ export const projects: Project[] = [
     title: "Real-Time ASL Hand Gesture Detector",
     description: "A real-time hand gesture recognition system using Python, OpenCV, cvzone, and TensorFlow/Keras",
     tags: ["Python", "OpenCV", "cvzone", "TensorFlow/Keras"],
-    poster: "/videos/project-two.jpg",
+    video: "/videos/aslgesturedemo.mp4",
+    poster: "/videos/aslgesturedemo-poster.jpg",
     github: "https://github.com/",
   },
   {
