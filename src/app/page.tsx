@@ -15,6 +15,10 @@ export default function Home() {
           {site.name}
         </h1>
       </div>
+      {/* Temporary scroll targets for the nav until the real sections ship. */}
+      {["work", "videos", "about"].map((id) => (
+        <Section key={id} id={id} title={id} className="min-h-screen" />
+      ))}
       <Section id="demo" title="Shared pieces demo">
         <Reveal>
           <SocialLinks />

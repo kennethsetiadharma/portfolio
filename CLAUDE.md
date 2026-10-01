@@ -17,7 +17,7 @@ Single page, in this order: Hero → Code Projects (`#work`) → Video Projects 
 - [x] 0. Foundation: stack, content files, lazy 3D pipeline
 - [x] 1. Content types + placeholder data (projects.ts, videos.ts, site.ts) + placeholder media
 - [x] 2. Shared pieces: Section, Reveal/Stagger (Motion), SocialLinks, brand icons
-- [ ] 3. Nav: floating pill → Work / Videos / About, smooth scroll
+- [x] 3. Nav: floating pill → Work / Videos / About, smooth scroll
 - [ ] 4. Hero: name, intro, 3D object, SocialLinks; scroll-away rotate + fade
 - [ ] 5. Code Projects (#work): ProjectCard grid, in-view video previews
 - [ ] 6. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
