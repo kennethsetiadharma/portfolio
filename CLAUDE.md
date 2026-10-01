@@ -93,6 +93,7 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 - `useCanRender3D` gates it: below 768px or with `prefers-reduced-motion: reduce`, only `HeroFallback` renders and three.js is never downloaded.
 - Lighting comes from drei `<Environment>` + `<Lightformer>`s defined in code. Don't use HDR presets that fetch files from a CDN.
 - Keep `dpr={[1, 2]}` on the Canvas.
+- The render loop pauses (`frameloop="never"`) whenever the hero is off-screen, via `useInView` in `HeroCanvas`. Don't remove it: an off-screen die otherwise keeps burning CPU/GPU.
 - Project preview clips must be muted, short, compressed, and always have a poster. The video-project lightbox player (mp4) has controls and sound, since the viewer clicked play, and still gets a poster.
 - Project cards show a static poster. The demo clip only mounts (and downloads) inside the click-to-open dialog, where it plays muted and looping; with reduced motion it shows controls instead of autoplaying.
 - YouTube iframes load only after a click, from `youtube-nocookie.com`. Never render an iframe on page load.

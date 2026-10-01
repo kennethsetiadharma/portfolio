@@ -127,12 +127,19 @@ function DieRig({ progress }: { progress?: MotionValue<number> }) {
 
 export default function HeroScene({
   progress,
+  paused = false,
 }: {
   progress?: MotionValue<number>;
+  /** Stops the render loop (no drawing, no useFrame) while the hero is off-screen. */
+  paused?: boolean;
 }) {
   return (
     // dpr caps pixel density at 2x so high-DPI screens don't render 9x the pixels.
-    <Canvas dpr={[1, 2]} camera={{ position: [0, 0, 7], fov: 40 }}>
+    <Canvas
+      dpr={[1, 2]}
+      frameloop={paused ? "never" : "always"}
+      camera={{ position: [0, 0, 7], fov: 40 }}
+    >
       {/* The K is loaded from an SVG, which suspends until it arrives. */}
       <Suspense fallback={null}>
         <DieRig progress={progress} />
