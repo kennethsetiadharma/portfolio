@@ -7,11 +7,13 @@ export function Projects() {
   return (
     <Section id="work" title="Work">
       <Stagger className="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => (
-          <StaggerItem key={project.title}>
-            <ProjectCard project={project} />
-          </StaggerItem>
-        ))}
+        {projects
+          .filter((project) => !project.hidden)
+          .map((project) => (
+            <StaggerItem key={project.title}>
+              <ProjectCard project={project} />
+            </StaggerItem>
+          ))}
       </Stagger>
     </Section>
   );

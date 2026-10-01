@@ -23,7 +23,7 @@ export const site = {
   ],
   about: {
     photo: "/images/kenneth.JPG",
-    photoAlt: "Portrait of Your Name",
+    photoAlt: "Portrait of Kenneth Setiadharma",
     text: [
       "I'm a computer science student who likes building clean, fast things for the web.",
       "Outside of code, I edit videos and tinker with 3D.",
