@@ -12,16 +12,16 @@ Single-page personal portfolio for a CS student. Recruiters must find the projec
 
 ## Page structure & build order
 
-Single page, in this order: Hero → Code Projects (`#work`) → Video Projects (`#videos`) → About (`#about`) → Footer, with a floating pill nav linking to Work / Videos / About. Tick items off as they ship.
+Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`) → Video Projects (`#videos`) → Footer, with a floating pill nav linking to About / Work / Videos. Tick items off as they ship.
 
 - [x] 0. Foundation: stack, content files, lazy 3D pipeline
 - [x] 1. Content types + placeholder data (projects.ts, videos.ts, site.ts) + placeholder media
 - [x] 2. Shared pieces: Section, Reveal/Stagger (Motion), SocialLinks, brand icons
 - [x] 3. Nav: floating pill → Work / Videos / About, smooth scroll
-- [ ] 4. Hero: name, intro, 3D object, SocialLinks; scroll-away rotate + fade
-- [ ] 5. Code Projects (#work): ProjectCard grid, in-view video previews
-- [ ] 6. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
-- [ ] 7. About (#about): photo + 2–3 sentences
+- [x] 4. Hero: name, intro, 3D object, SocialLinks; scroll-away rotate + fade
+- [x] 5. About (#about): photo + 2–3 sentences
+- [ ] 6. Code Projects (#work): ProjectCard grid, in-view video previews
+- [ ] 7. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
 - [ ] 8. Footer: contact line + SocialLinks
 - [ ] 9. Polish pass: Playwright desktop/mobile screenshots, reduced-motion, Lighthouse
 
@@ -50,11 +50,11 @@ Use the Playwright MCP server to screenshot the running site after any UI change
 src/
   app/              routes: layout.tsx, page.tsx, globals.css
   components/ui/    shadcn components (button, dialog)
-  components/three/ 3D: HeroCanvas (gate + lazy load), HeroScene (R3F), HeroFallback
+  components/three/ 3D: HeroCanvas (gate + lazy load), HeroScene (R3F + motion), Die (model), die-config, HeroVisual (scroll), HeroFallback
   components/motion/ MotionProvider, Reveal, Stagger
   components/icons/ brand SVG icons (lucide v1 has no GitHub/LinkedIn)
   components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, PreviewVideo, VideoGrid, VideoPlayer
-  sections/         Hero, Projects, Videos, About, Footer (Server Components, map over content)
+  sections/         Hero, About, Projects, Videos, Footer (Server Components, map over content)
   content/          site.ts (name, intro, links, about, nav), projects.ts, videos.ts
   hooks/            client hooks
 public/videos/      code-project preview clips + posters, local video-project mp4s
@@ -76,14 +76,14 @@ public/images/      me.jpg, video-project thumbnails (images/videos/)
 - Headline: huge, tight, sans-serif (Geist, `tracking-tighter`, `leading-none`, fluid `clamp()` size).
 - Nav: floating pill shape.
 - Buttons: dark, rounded.
-- One 3D hero object with chrome materials. Only one.
-- Colour: neutral greys plus 1–2 vibrant accents max. The accent is `--brand` (`bg-brand`, `text-brand`). Don't confuse it with shadcn's `accent`, which is a subtle hover background.
+- One 3D hero object: a chrome die. The 1-face shows an extruded K loaded from `public/k.svg`; the other faces have recessed pips. Only one 3D object. Tweak it in `src/components/three/die-config.ts`.
+- Colour: neutral greys plus 1–2 vibrant accents max. The one exception is the hero die's six tinted-chrome faces (colours live in `die-config.ts`); nothing else on the page may add colours. The accent is `--brand` (`bg-brand`, `text-brand`). Don't confuse it with shadcn's `accent`, which is a subtle hover background.
 - Use the reference sites (butter.video, landonorris.com) for vibe only. Don't copy them.
 
 ## Animation
 
 - Motion only (`motion/react`). No other animation libraries.
-- One signature moment: the hero 3D object rotates and fades as you scroll away (`useScroll` + `useTransform`).
+- One signature moment: the hero die settles K-forward and fades as you scroll away (`useScroll` + `useTransform`). Clicking the die rolls it and lands K-forward.
 - Everything else is subtle: sections and cards fade up on enter, grids staggered, `once: true`.
 - Respect `prefers-reduced-motion`: `MotionConfig reducedMotion="user"` at the root, CSS smooth scroll only under `no-preference`, no video autoplay.
 

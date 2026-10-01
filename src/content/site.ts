@@ -11,9 +11,9 @@ export const site = {
     resume: "/resume.pdf",
   },
   nav: [
+    { label: "About", href: "#about" },
     { label: "Work", href: "#work" },
     { label: "Videos", href: "#videos" },
-    { label: "About", href: "#about" },
   ],
   about: {
     photo: "/images/me.jpg",

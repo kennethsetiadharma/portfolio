@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { MotionValue } from "motion/react";
 import { useCanRender3D } from "@/hooks/use-can-render-3d";
 import { HeroFallback } from "./HeroFallback";
 
@@ -11,12 +12,19 @@ const HeroScene = dynamic(() => import("./HeroScene"), {
   loading: () => <HeroFallback />,
 });
 
-export function HeroCanvas({ className }: { className?: string }) {
+export function HeroCanvas({
+  className,
+  progress,
+}: {
+  className?: string;
+  /** 0 to 1 as the hero scrolls away; drives extra 3D rotation. */
+  progress?: MotionValue<number>;
+}) {
   const canRender3D = useCanRender3D();
 
   return (
     <div className={className}>
-      {canRender3D ? <HeroScene /> : <HeroFallback />}
+      {canRender3D ? <HeroScene progress={progress} /> : <HeroFallback />}
     </div>
   );
 }
