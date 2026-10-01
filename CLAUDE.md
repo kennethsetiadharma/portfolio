@@ -20,7 +20,7 @@ Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`
 - [x] 3. Nav: floating pill → Work / Videos / About, smooth scroll
 - [x] 4. Hero: name, intro, 3D object, SocialLinks; scroll-away rotate + fade
 - [x] 5. About (#about): photo + 2–3 sentences
-- [ ] 6. Code Projects (#work): ProjectCard grid, in-view video previews
+- [x] 6. Code Projects (#work): ProjectCard grid, click-to-open preview dialog
 - [ ] 7. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
 - [ ] 8. Footer: contact line + SocialLinks
 - [ ] 9. Polish pass: Playwright desktop/mobile screenshots, reduced-motion, Lighthouse
@@ -49,11 +49,11 @@ Use the Playwright MCP server to screenshot the running site after any UI change
 ```
 src/
   app/              routes: layout.tsx, page.tsx, globals.css
-  components/ui/    shadcn components (button, dialog)
+  components/ui/    shadcn-style components (button, dialog)
   components/three/ 3D: HeroCanvas (gate + lazy load), HeroScene (R3F + motion), Die (model), die-config, HeroVisual (scroll), HeroFallback
   components/motion/ MotionProvider, Reveal, Stagger
   components/icons/ brand SVG icons (lucide v1 has no GitHub/LinkedIn)
-  components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, PreviewVideo, VideoGrid, VideoPlayer
+  components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, ProjectDialog, ProjectMeta, VideoGrid, VideoPlayer
   sections/         Hero, About, Projects, Videos, Footer (Server Components, map over content)
   content/          site.ts (name, intro, links, about, nav), projects.ts, videos.ts
   hooks/            client hooks
@@ -94,5 +94,5 @@ public/images/      me.jpg, video-project thumbnails (images/videos/)
 - Lighting comes from drei `<Environment>` + `<Lightformer>`s defined in code. Don't use HDR presets that fetch files from a CDN.
 - Keep `dpr={[1, 2]}` on the Canvas.
 - Videos must be muted, short, compressed, and always have a poster.
-- Project preview videos use `preload="none"` and only play while in view.
+- Project cards show a static poster. The demo clip only mounts (and downloads) inside the click-to-open dialog, where it plays muted and looping; with reduced motion it shows controls instead of autoplaying.
 - YouTube iframes load only after a click, from `youtube-nocookie.com`. Never render an iframe on page load.
