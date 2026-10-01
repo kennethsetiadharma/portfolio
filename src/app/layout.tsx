@@ -18,9 +18,33 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
+// Absolute base URL for the share image. On Vercel this is the production domain, so it
+// follows you automatically when you add a custom domain. Set NEXT_PUBLIC_SITE_URL to override.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
+const description = `${site.intro} ${site.location}.`;
+
+// The favicon, app icon and link-preview images are the files in this folder
+// (favicon.ico, icon.png, apple-icon.png, opengraph-image.png, twitter-image.png).
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: site.name,
-  description: site.intro,
+  description,
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: site.name,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: site.name,
+    description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

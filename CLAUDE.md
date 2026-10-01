@@ -71,7 +71,7 @@ Use the Playwright MCP server to screenshot the running site after any UI change
 
 ```
 src/
-  app/              routes: layout.tsx, page.tsx, globals.css; dev/die-snapshot (dev-only, 404 in production)
+  app/              routes: layout.tsx, page.tsx, globals.css; dev/die-snapshot (dev-only, 404 in production); favicon.ico, icon.png, apple-icon.png, opengraph-image.png, twitter-image.png (generated)
   components/ui/    shadcn-style components (button, dialog)
   components/three/ 3D: HeroCanvas (static-first, lazy load, crossfade, fallbacks), HeroScene (R3F, motion, PerformanceMonitor), Die (model), DieEnvironment (shared lighting), die-config, HeroVisual (scroll), HeroFallback (static die image), HeroErrorBoundary, DieSnapshot (dev-only exporter)
   components/motion/ MotionProvider, Reveal, Stagger
@@ -82,6 +82,7 @@ src/
   hooks/            client hooks: use-can-render-3d (reduced motion + WebGL), use-media-query
 public/videos/      code-project preview clips + posters, local video-project mp4s
 public/images/      your portrait (path set in site.about.photo), video-project thumbnails (images/videos/)
+scripts/           make-icons.mjs (generates the favicon, app icons and link-preview images from the static die image)
 ```
 
 ## Content convention
@@ -143,4 +144,5 @@ public/images/      your portrait (path set in site.about.photo), video-project 
 - The hero headline is `clamp(3rem, 9.5vw, 9rem)` so the full name fits on one line on desktop and the whole hero (name, intro, location, email, icons) stays above the fold from 1024×768 up. Re-check this if the name or intro changes.
 - Lighthouse on a production build: mobile with the 3D enabled and the static die image 95 / 100 / 100 / 100 (LCP 1.8 s, total blocking time about 230 ms from three.js starting after idle; it was 99 / TBT 10 ms when phones got only a static image). The static die image is the LCP element, so `HeroFallback` keeps `fetchPriority="high"` on it: without it LCP was 2.6 s; desktop performance 81, because the three.js chunk blocks the main thread for about 400 ms (inflated by software WebGL in headless Chrome). Geist Mono has `preload: false` so it doesn't compete with Geist Sans. Lighthouse was run with `npx` from a temp folder and is **not** a project dependency.
 - 3D load timing (production build, cold cache, median of 3, ms from navigation start, "starts appearing" / "fully visible"): desktop 950 / 1,167; good 4G + 4x CPU 1,565 / 1,779; slow 4G + 4x CPU 4,677 / 4,894 (before the fade/warm-up work: 954 / 1,335; 1,594 / 1,964; 4,712 / 5,079). A CPU profile showed the main thread is about 80% idle between the canvas being inserted and the 3D appearing, i.e. the wait is on the graphics pipeline (software WebGL in headless Chrome), not JavaScript, so shrinking the JS or the 256px reflection map (tried 128: no change) won't help. Test the real speed on a phone.
+- Favicon, app icon and link-preview (Open Graph + Twitter) images are all the static die image: `src/app/favicon.ico` (16/32/48), `icon.png`, `apple-icon.png` and `opengraph-image.png` / `twitter-image.png` (1200x630, the die on the site's grey gradient). They are generated, not hand-made: after regenerating `public/images/die-static.webp` (see Design rules), run `node scripts/make-icons.mjs` (uses `sharp`, which ships with Next). Title, description and the Open Graph / Twitter tags come from `src/content/site.ts` via `metadata` in `layout.tsx`. The absolute URL for the share image comes from `NEXT_PUBLIC_SITE_URL` or, on Vercel, `VERCEL_PROJECT_PRODUCTION_URL` (which follows a custom domain automatically); locally it falls back to `http://localhost:3000`. After the first deploy, paste the live URL into LinkedIn's Post Inspector (and any other preview debugger) once, since those sites cache link previews.
 - Playwright screenshots can time out while a video is playing or the 3D canvas is busy; pause the video and pass a longer `timeout`. Navigating to the same URL with only a different `#hash` doesn't reload the page, so go through `about:blank` first.
