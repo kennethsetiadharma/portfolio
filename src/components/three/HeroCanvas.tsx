@@ -2,12 +2,13 @@
 
 import dynamic from "next/dynamic";
 import { useInView, type MotionValue } from "motion/react";
-import { useRef, useState } from "react";
+import { preload } from "react-dom";
+import { useEffect, useRef, useState } from "react";
 import { useCanRender3D } from "@/hooks/use-can-render-3d";
-import { useIdle } from "@/hooks/use-idle";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { HeroErrorBoundary } from "./HeroErrorBoundary";
+import { DIE } from "./die-config";
 import { HeroFallback } from "./HeroFallback";
 
 // three.js lives in its own chunk and is only downloaded when HeroScene is
@@ -18,7 +19,7 @@ const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
 // the 3D in on top (IN), keep the still fully opaque underneath until that's done, then drop
 // it quickly. No dip in the middle. If the 3D later fails, the still comes straight back.
 const STILL = "transition-opacity ease-out motion-reduce:transition-none";
-const IN = "transition-opacity duration-500 motion-reduce:transition-none";
+const IN = "transition-opacity duration-300 motion-reduce:transition-none";
 
 export function HeroCanvas({
   className,
@@ -31,8 +32,10 @@ export function HeroCanvas({
   const canRender3D = useCanRender3D();
   // Touch screens and small windows get a lower pixel-density cap (see HeroScene).
   const isSmall = useMediaQuery("(max-width: 767px), (pointer: coarse)");
-  // Don't even start downloading three.js until the page has settled.
-  const idle = useIdle();
+  // The still die is what you see first, so it gets the bandwidth first: the 3D scene only
+  // starts downloading once it has loaded (starting both at once made the still arrive later
+  // on slow connections).
+  const [stillLoaded, setStillLoaded] = useState(false);
   const [ready, setReady] = useState(false); // first 3D frames are on screen
   const [failed, setFailed] = useState(false); // gave up on 3D for this visit
 
@@ -43,6 +46,13 @@ export function HeroCanvas({
     margin: "100px 0px 100px 0px",
     initial: true,
   });
+
+  const show3D = canRender3D && stillLoaded && !failed;
+  // The scene fetches the K shape only after it has downloaded and rendered. Ask for it now so
+  // it is already there (removes a wait of 100-200 ms).
+  useEffect(() => {
+    if (show3D) preload(DIE.kSvg, { as: "fetch", crossOrigin: "anonymous" });
+  }, [show3D]);
 
   const fail = () => {
     setFailed(true);
@@ -65,13 +75,13 @@ export function HeroCanvas({
           "absolute inset-0",
           STILL,
           ready
-            ? "opacity-0 delay-500 duration-100"
+            ? "opacity-0 delay-300 duration-100"
             : "opacity-100 duration-200",
         )}
       >
-        <HeroFallback />
+        <HeroFallback onLoad={() => setStillLoaded(true)} />
       </div>
-      {canRender3D && idle && !failed && (
+      {show3D && (
         <div
           className={cn(
             "absolute inset-0",

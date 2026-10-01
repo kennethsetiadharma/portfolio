@@ -30,7 +30,10 @@ function DieRig({ progress }: { progress?: MotionValue<number> }) {
     q: REST.clone(), // tumble state (kept underneath while scroll-settling)
     q0: new Quaternion(), // where a roll started
     axis: new Vector3(0, 1, 0), // random roll axis
-    phase: "idle" as Phase,
+    // Starts holding K-forward (matching the still image underneath while the 3D fades in),
+    // then plays one "wake-up" roll so it is obvious the die is alive.
+    phase: "hold" as Phase,
+    wake: true,
     t: 0, // seconds in the current roll / hold
     idle: 1, // 0..1 ramp so the tumble eases back in after a roll
   });
@@ -64,6 +67,7 @@ function DieRig({ progress }: { progress?: MotionValue<number> }) {
       .set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5)
       .normalize();
     st.phase = "roll";
+    st.wake = false;
     st.t = 0;
   };
 
@@ -103,7 +107,9 @@ function DieRig({ progress }: { progress?: MotionValue<number> }) {
       }
     } else {
       st.t += dt;
-      if (st.t >= DIE.holdSeconds) {
+      if (st.wake) {
+        if (st.t >= DIE.wakeDelaySeconds) startRoll();
+      } else if (st.t >= DIE.holdSeconds) {
         st.phase = "idle";
         st.idle = 0;
       }

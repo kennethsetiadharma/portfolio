@@ -14,7 +14,7 @@ const { frame, src, size } = DIE.staticDie;
 // (K-forward). It is what you see first on every screen, and what stays for reduced motion,
 // no WebGL, or a device too slow for the 3D scene. It is sized to line up with the live die.
 // `cqh`/`cqw` are the hero visual box's own size (HeroCanvas makes it a size container).
-export function HeroFallback() {
+export function HeroFallback({ onLoad }: { onLoad?: () => void }) {
   return (
     <div className="flex size-full items-center justify-center" aria-hidden>
       <Image
@@ -23,6 +23,7 @@ export function HeroFallback() {
         width={size}
         height={size}
         unoptimized
+        onLoad={onLoad}
         loading="eager"
         // It is the first thing painted (so the LCP element): fetch it at high priority.
         fetchPriority="high"

@@ -49,4 +49,6 @@ export const DIE = {
   rollTurns: 2,
   /** Pause on the K after a roll before the idle tumble resumes. */
   holdSeconds: 0.6,
+  /** On first appearance: how long the die holds K-forward (while the 3D fades in over the still) before its one wake-up roll. */
+  wakeDelaySeconds: 0.6,
 };
