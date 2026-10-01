@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { GithubIcon } from "@/components/icons/GithubIcon";
+import { YoutubeIcon } from "@/components/icons/YoutubeIcon";
 import { buttonVariants } from "@/components/ui/button";
 import type { Project } from "@/content/projects";
 import { cn } from "@/lib/utils";
@@ -31,12 +32,16 @@ export function ProjectTags({
 export function ProjectLinks({
   github,
   live,
+  demo,
+  note,
   className,
-}: Pick<Project, "github" | "live"> & { className?: string }) {
-  if (!github && !live) return null;
+}: Pick<Project, "github" | "live" | "demo" | "note"> & {
+  className?: string;
+}) {
+  if (!github && !live && !demo && !note) return null;
   const pill = cn(buttonVariants({ size: "lg" }), "rounded-full px-4");
   return (
-    <div className={cn("flex gap-2", className)}>
+    <div className={cn("flex flex-wrap items-center gap-2", className)}>
       {live && (
         <a
           href={live}
@@ -57,6 +62,17 @@ export function ProjectLinks({
           <GithubIcon className="size-4" /> Code
         </a>
       )}
+      {demo && (
+        <a
+          href={demo}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={pill}
+        >
+          <YoutubeIcon className="size-4" /> Demo
+        </a>
+      )}
+      {note && <p className="text-sm text-muted-foreground">{note}</p>}
     </div>
   );
 }

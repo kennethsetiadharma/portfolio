@@ -15,6 +15,10 @@ export type Project = {
   github?: string;
   /** Leave undefined to hide the button. */
   live?: string;
+  /** Full YouTube demo URL. Leave undefined to hide the button. */
+  demo?: string;
+  /** Short muted line shown with the links, e.g. "Code available on request". */
+  note?: string;
   /** Keep the entry in this file but don't show it on the site (e.g. until its links are ready). */
   hidden?: boolean;
 };
@@ -27,8 +31,8 @@ export const projects: Project[] = [
     tags: ["Java", "Maven", "JavaFX"],
     video: "/videos/virusbreach-demo.mp4",
     poster: "/videos/virusbreach-thumbnail.jpg",
-    // TODO github: the repo is on SFU's private server (github.sfu.ca), so visitors can't open it.
-    //   Add a link once it is copied to github.com (if the course and teammates allow), or leave it off.
+    github: "https://github.com/kennethsetiadharma/virus-breach",
+    demo: "https://www.youtube.com/watch?v=TR7ZeQVZClo",
     // No live link: it is a desktop game.
   },
   {
@@ -37,7 +41,8 @@ export const projects: Project[] = [
     tags: ["Python", "OpenCV", "cvzone", "TensorFlow/Keras"],
     video: "/videos/aslgesturedemo.mp4",
     poster: "/videos/aslgesturedemo-poster.jpg",
-    // TODO github: add the repo URL (Code button appears automatically once set).
+    note: "Code available on request",
+    // TODO github: add the repo URL (Code button appears automatically once set), then drop the note.
   },
   {
     title: "Group Consensus App",

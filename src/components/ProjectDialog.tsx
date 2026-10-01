@@ -18,7 +18,7 @@ import type { Project } from "@/content/projects";
 // with the demo clip and a short description. The clip only exists (and only
 // downloads) while the dialog is open.
 export function ProjectDialog({ project }: { project: Project }) {
-  const { title, description, tags, video, poster, github, live } = project;
+  const { title, description, tags, video, poster, github, live, demo, note } = project;
   const reduceMotion = useReducedMotion();
 
   return (
@@ -68,7 +68,7 @@ export function ProjectDialog({ project }: { project: Project }) {
             <DialogDescription>{description}</DialogDescription>
           </div>
           <ProjectTags tags={tags} />
-          <ProjectLinks github={github} live={live} className="pt-2" />
+          <ProjectLinks github={github} live={live} demo={demo} note={note} className="pt-2" />
         </div>
       </DialogContent>
     </Dialog>
