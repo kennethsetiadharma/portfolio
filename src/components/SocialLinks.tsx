@@ -21,7 +21,7 @@ export function SocialLinks({ className }: { className?: string }) {
           <a
             href={href}
             aria-label={label}
-            target={href.startsWith("http") ? "_blank" : undefined}
+            target={href.startsWith("mailto:") ? undefined : "_blank"}
             rel="noopener noreferrer"
             className={cn(buttonVariants({ size: "icon-lg" }), "rounded-full")}
           >

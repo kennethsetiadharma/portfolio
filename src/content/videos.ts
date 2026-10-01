@@ -18,7 +18,7 @@ export type VideoProject = VideoBase &
 export const videos: VideoProject[] = [
   {
     title: "SFU Kendo - Mask Off",
-    thumbnail: "/images/videos/video-one.jpg",
+    thumbnail: "/images/videos/kendothumbnail.JPG",
     youtubeId: "-GYLVULkIys",
   },
   {

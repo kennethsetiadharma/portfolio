@@ -6,13 +6,15 @@ const email = "kenneth.setiadharma@gmail.com";
 export const site = {
   name: "Kenneth Setiadharma",
   intro: "CS student building things for the web.",
+  /** Shown under the intro in the hero. */
+  location: "Based in Burnaby, BC",
   /** Shown as text in the footer; the mailto link below is built from it. */
   email,
   links: {
     github: "https://github.com/kennethsetiadharma",
     linkedin: "https://www.linkedin.com/in/kenneth-setiadharma-812826289/",
     email: `mailto:${email}`,
-    resume: "/resume.pdf",
+    resume: "/Kenneth Setiadharma Technical Resume.pdf",
   },
   nav: [
     { label: "About", href: "#about" },
