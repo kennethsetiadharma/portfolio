@@ -1,5 +1,5 @@
-// Personal details shown in the hero and footer.
-// Edit this file to change your name, intro, or links — no component changes needed.
+// Personal details shown across the page.
+// Edit this file to change your name, intro, links, about text, or nav: no component changes needed.
 
 export const site = {
   name: "Your Name",
@@ -10,4 +10,18 @@ export const site = {
     email: "mailto:you@example.com",
     resume: "/resume.pdf",
   },
+  nav: [
+    { label: "Work", href: "#work" },
+    { label: "Videos", href: "#videos" },
+    { label: "About", href: "#about" },
+  ],
+  about: {
+    photo: "/images/me.jpg",
+    photoAlt: "Portrait of Your Name",
+    text: [
+      "I'm a computer science student who likes building clean, fast things for the web.",
+      "Outside of code, I edit videos and tinker with 3D.",
+    ],
+  },
+  contact: "Want to work together? Say hello.",
 } as const;

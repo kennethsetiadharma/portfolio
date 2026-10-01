@@ -17,4 +17,28 @@ export type Project = {
   live?: string;
 };
 
-export const projects: Project[] = [];
+// Placeholder entries: replace with real projects.
+export const projects: Project[] = [
+  {
+    title: "Project One",
+    description: "A short line about what this project does.",
+    tags: ["Next.js", "TypeScript", "Tailwind"],
+    poster: "/videos/project-one.jpg",
+    github: "https://github.com/",
+    live: "https://example.com",
+  },
+  {
+    title: "Project Two",
+    description: "A short line about what this project does.",
+    tags: ["Python", "FastAPI"],
+    poster: "/videos/project-two.jpg",
+    github: "https://github.com/",
+  },
+  {
+    title: "Project Three",
+    description: "A short line about what this project does.",
+    tags: ["React", "Three.js"],
+    poster: "/videos/project-three.jpg",
+    live: "https://example.com",
+  },
+];
