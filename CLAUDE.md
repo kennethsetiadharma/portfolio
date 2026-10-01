@@ -24,13 +24,13 @@ Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`
 - [x] 7. Video Projects (#videos): thumbnail grid + lightbox (YouTube click-to-load or mp4)
 - [x] 8. Footer: contact line + SocialLinks
 - [x] 9. Polish pass: Playwright desktop/mobile screenshots, reduced-motion, Lighthouse
-- [ ] 10. Launch: finish the hidden entries and real links (see "Current status"), then deploy to Vercel
+- [x] 10. Launch: deployed to Vercel at https://www.kennethsetiadharma.com (hidden entries and the ASL `github` link still pending; see "Current status")
 
 ## Current status (read before editing content)
 
-Items 0–9 are built and pushed to GitHub (`kennethsetiadharma/portfolio`, branch `main`). The site is **not deployed yet**. Plan: connect the repo to Vercel, after which every push to `main` redeploys automatically (so content can be fixed after launch; no need to finish everything first).
+Items 0–10 are done. The site is **live at https://www.kennethsetiadharma.com** (Vercel, repo `kennethsetiadharma/portfolio`, branch `main`): every push to `main` redeploys automatically in about a minute, so content can be fixed after launch. The bare domain `kennethsetiadharma.com` 308-redirects to `www`, and HTTP redirects to HTTPS (HSTS on). Verified live on 2026-10-01: no console errors or failed requests on desktop or a 390px touch phone; the 3D die, both project lightboxes, the Kendo YouTube lightbox, the resume PDF and the Open Graph/Twitter tags (absolute URLs on the real domain) all work; Lighthouse mobile 95 / 100 / 100 / 100 (LCP 2.4 s, TBT 190 ms), desktop 100 / 100 / 100 / 100.
 
-**Real content in place:** name, intro, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the Virus Breach and ASL gesture detector projects (with demo clips), and the SFU Kendo - Mask Off video.
+**Real content in place:** name, intro, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the About copy, the Virus Breach and ASL gesture detector projects (with demo clips), the Virus Breach GitHub and YouTube demo links, and the SFU Kendo - Mask Off video.
 
 **Hidden until launch** (`hidden: true` in the content file; the sections skip these, but the data stays so it is easy to restore):
 
@@ -43,10 +43,10 @@ To show one: replace its placeholder content, then delete its `hidden: true` lin
 
 **Visible entries with a link removed on purpose** (the button hides itself while the field is undefined; each has a `TODO` comment in `projects.ts`):
 
-- Virus Breach: no `github` (the repo is on SFU's private server, `github.sfu.ca`, so visitors can't open it; decision pending: copy it to github.com only if the course and teammates allow, otherwise leave it off) and no `live` (it is a desktop game).
-- ASL gesture detector: no `github` yet; add the repo URL when known.
+- Virus Breach: no `live` (it is a desktop game). It has `github` (`kennethsetiadharma/virus-breach`) and `demo` (YouTube video).
+- ASL gesture detector: no `github` yet, so it shows `note: "Code available on request"` instead. When the repo URL is known, set `github` and delete the `note` line (and its `TODO`).
 
-**Still to do before/around launch:** the entries above; optionally a favicon and social-share image; check `src/content/*.ts` for any leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
+**Still to do:** the hidden entries and the ASL `github` link above; optional: `robots.ts` + `sitemap.ts` (currently 404), a canonical URL, analytics, and a smaller `die-static.webp` / portrait (Lighthouse flags about 43 KB of image savings). After any change to the share image, re-scrape it with LinkedIn's Post Inspector, since previews are cached. Check `src/content/*.ts` for leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
 
 ## Stack
 
@@ -75,7 +75,7 @@ src/
   components/ui/    shadcn-style components (button, dialog)
   components/three/ 3D: HeroCanvas (static-first, lazy load, crossfade, fallbacks), HeroScene (R3F, motion, PerformanceMonitor), Die (model), DieEnvironment (shared lighting), die-config, HeroVisual (scroll), HeroFallback (static die image), HeroErrorBoundary, DieSnapshot (dev-only exporter)
   components/motion/ MotionProvider, Reveal, Stagger
-  components/icons/ brand SVG icons (lucide v1 has no GitHub/LinkedIn)
+  components/icons/ brand SVG icons: GitHub, LinkedIn, YouTube (lucide v1 has no brand icons)
   components/       shared leaves: Nav, Section, SocialLinks, ProjectCard, ProjectDialog, ProjectMeta, ThumbTrigger, VideoCard, VideoPlayer
   sections/         Hero, About, Projects, Videos, Footer (Server Components, map over content)
   content/          site.ts (name, intro, location, email, links, about, nav), projects.ts, videos.ts
@@ -92,7 +92,7 @@ scripts/           make-icons.mjs (generates the favicon, app icons and link-pre
 - Name, intro, location, email, links, about text/photo, contact line, and nav entries live in `src/content/site.ts`.
 - Clips and posters go in `public/videos/` (referenced as `/videos/<file>`); photos and thumbnails go in `public/images/`.
 - Adding a project must only require editing `projects.ts` and adding media. If a change would force a component edit to add a project, the component is wrong.
-- Optional fields (`github`, `live`, `video`) hide their UI when undefined.
+- Optional fields (`github`, `live`, `demo`, `video`) hide their UI when undefined. `demo` is a full YouTube URL shown as a "Demo" button with the YouTube icon, opening in a new tab. `note` is a short muted line shown beside the link buttons (e.g. "Code available on request"); it renders on its own if there are no buttons.
 - `hidden: true` on a project or video keeps it in the file but removes it from the page.
 - YouTube IDs: only the 11-character ID after `v=` (stop before any `&`). Keep a leading `-` or `_`; dropping it makes the video fail to load.
 

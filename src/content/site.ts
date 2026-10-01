@@ -25,8 +25,8 @@ export const site = {
     photo: "/images/kenneth.JPG",
     photoAlt: "Portrait of Kenneth Setiadharma",
     text: [
-      "I'm a computer science student who likes building clean, fast things for the web.",
-      "Outside of code, I edit videos and tinker with 3D.",
+      "I'm a 3rd year computer science student at SFU who likes building clean, fast things for the web.",
+      "Outside of code, I film and edit videos.",
     ],
   },
   contact: "Want to work together? Say hello.",
