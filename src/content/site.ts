@@ -12,7 +12,7 @@ export const site = {
   email,
   links: {
     github: "https://github.com/kennethsetiadharma",
-    linkedin: "https://www.linkedin.com/in/kenneth-setiadharma-812826289/",
+    linkedin: "https://www.linkedin.com/in/kennethsetiadharma/",
     email: `mailto:${email}`,
     resume: "/Kenneth Setiadharma Technical Resume.pdf",
   },
