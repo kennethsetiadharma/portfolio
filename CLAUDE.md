@@ -46,7 +46,7 @@ To show one: replace its placeholder content, then delete its `hidden: true` lin
 - Virus Breach: no `live` (it is a desktop game). It has `github` (`kennethsetiadharma/virus-breach`) and `demo` (YouTube video).
 - ASL gesture detector: no `github` yet, so it shows `note: "Code available on request"` instead. When the repo URL is known, set `github` and delete the `note` line (and its `TODO`).
 
-**Still to do:** the hidden entries and the ASL `github` link above; optional: `robots.ts` + `sitemap.ts` (currently 404), a canonical URL, analytics, and a smaller `die-static.webp` / portrait (Lighthouse flags about 43 KB of image savings). After any change to the share image, re-scrape it with LinkedIn's Post Inspector, since previews are cached. Check `src/content/*.ts` for leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
+**Still to do:** the hidden entries and the ASL `github` link above; optional: `robots.ts` + `sitemap.ts` (currently 404), a canonical URL, and a smaller `die-static.webp` / portrait (Lighthouse flags about 43 KB of image savings). After any change to the share image, re-scrape it with LinkedIn's Post Inspector, since previews are cached. Check `src/content/*.ts` for leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
 
 ## Stack
 
@@ -54,6 +54,7 @@ To show one: replace its placeholder content, then delete its `hidden: true` lin
 - Tailwind CSS v4 (configured in `src/app/globals.css`, no `tailwind.config`)
 - shadcn/ui (`base-nova` style, Base UI primitives; components are copied into `src/components/ui/`)
 - Motion (`motion/react`) for UI animation
+- @vercel/analytics (`<Analytics />` in `src/app/layout.tsx`; page views show in the Vercel dashboard, and it only reports on the deployed site)
 - three + @react-three/fiber + @react-three/drei for the 3D hero
 - Geist / Geist Mono via `next/font/google` in `src/app/layout.tsx`
 
