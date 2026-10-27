@@ -14,7 +14,7 @@ export const site = {
     github: "https://github.com/kennethsetiadharma",
     linkedin: "https://www.linkedin.com/in/kennethsetiadharma/",
     email: `mailto:${email}`,
-    resume: "/Kenneth Setiadharma Technical Resume.pdf",
+    resume: "/Kenneth Setiadharma Resume - Oct 2026.pdf",
   },
   nav: [
     { label: "About", href: "#about" },
@@ -25,7 +25,7 @@ export const site = {
     photo: "/images/kenneth.JPG",
     photoAlt: "Portrait of Kenneth Setiadharma",
     text: [
-      "I'm a 3rd year computer science student at SFU who likes building clean, fast things for the web.",
+      "A CS student building fast and cool things for the web",
       "Outside of code, I film and edit videos.",
     ],
   },
