@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Trophy } from "lucide-react";
 import { GithubIcon } from "@/components/icons/GithubIcon";
 import { YoutubeIcon } from "@/components/icons/YoutubeIcon";
 import { buttonVariants } from "@/components/ui/button";
@@ -28,17 +28,39 @@ export function ProjectTags({
   );
 }
 
+// Accent badge for a hackathon win or similar. Renders nothing when unset.
+export function ProjectAward({
+  award,
+  className,
+}: {
+  award: Project["award"];
+  className?: string;
+}) {
+  if (!award) return null;
+  return (
+    <p
+      className={cn(
+        "inline-flex w-fit items-center gap-1.5 rounded-full bg-brand px-3 py-1 text-xs font-medium text-black",
+        className,
+      )}
+    >
+      <Trophy className="size-3.5" aria-hidden /> {award}
+    </p>
+  );
+}
+
 // Buttons only render when their link is set.
 export function ProjectLinks({
   github,
   live,
   demo,
+  devpost,
   note,
   className,
-}: Pick<Project, "github" | "live" | "demo" | "note"> & {
+}: Pick<Project, "github" | "live" | "demo" | "devpost" | "note"> & {
   className?: string;
 }) {
-  if (!github && !live && !demo && !note) return null;
+  if (!github && !live && !demo && !devpost && !note) return null;
   const pill = cn(buttonVariants({ size: "lg" }), "rounded-full px-4");
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
@@ -70,6 +92,16 @@ export function ProjectLinks({
           className={pill}
         >
           <YoutubeIcon className="size-4" /> Demo
+        </a>
+      )}
+      {devpost && (
+        <a
+          href={devpost}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={pill}
+        >
+          Devpost <ArrowUpRight className="size-4" />
         </a>
       )}
       {note && <p className="text-sm text-muted-foreground">{note}</p>}

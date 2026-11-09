@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ProjectLinks, ProjectTags } from "@/components/ProjectMeta";
+import { ProjectAward, ProjectLinks, ProjectTags } from "@/components/ProjectMeta";
 import { ThumbTrigger } from "@/components/ThumbTrigger";
 import type { Project } from "@/content/projects";
 
@@ -18,7 +18,7 @@ import type { Project } from "@/content/projects";
 // with the demo clip and a short description. The clip only exists (and only
 // downloads) while the dialog is open.
 export function ProjectDialog({ project }: { project: Project }) {
-  const { title, description, tags, video, poster, github, live, demo, note } = project;
+  const { title, description, tags, video, poster, github, live, demo, devpost, award, note } = project;
   const reduceMotion = useReducedMotion();
 
   return (
@@ -61,6 +61,7 @@ export function ProjectDialog({ project }: { project: Project }) {
         </div>
         <div className="space-y-4 p-6 md:p-8">
           <div className="space-y-2">
+            <ProjectAward award={award} />
             <div className="flex items-center justify-between gap-4">
               <DialogTitle>{title}</DialogTitle>
               <DialogCloseButton className="shrink-0" />
@@ -68,7 +69,7 @@ export function ProjectDialog({ project }: { project: Project }) {
             <DialogDescription>{description}</DialogDescription>
           </div>
           <ProjectTags tags={tags} />
-          <ProjectLinks github={github} live={live} demo={demo} note={note} className="pt-2" />
+          <ProjectLinks github={github} live={live} demo={demo} devpost={devpost} note={note} className="pt-2" />
         </div>
       </DialogContent>
     </Dialog>

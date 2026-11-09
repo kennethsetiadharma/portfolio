@@ -30,7 +30,7 @@ Single page, in this order: Hero → About (`#about`) → Code Projects (`#work`
 
 Items 0–10 are done. The site is **live at https://www.kennethsetiadharma.com** (Vercel, repo `kennethsetiadharma/portfolio`, branch `main`): every push to `main` redeploys automatically in about a minute, so content can be fixed after launch. The bare domain `kennethsetiadharma.com` 308-redirects to `www`, and HTTP redirects to HTTPS (HSTS on). Verified live on 2026-10-01: no console errors or failed requests on desktop or a 390px touch phone; the 3D die, both project lightboxes, the Kendo YouTube lightbox, the resume PDF and the Open Graph/Twitter tags (absolute URLs on the real domain) all work; Lighthouse mobile 95 / 100 / 100 / 100 (LCP 2.4 s, TBT 190 ms), desktop 100 / 100 / 100 / 100.
 
-**Real content in place:** name, intro, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the About copy, the Virus Breach and ASL gesture detector projects (with demo clips), the Virus Breach GitHub and YouTube demo links, and the SFU Kendo - Mask Off video.
+**Real content in place:** name, intro, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the About copy, the FridgeMates project (hackathon winner; poster, GitHub, YouTube demo, Devpost, award badge; no preview clip, the demo exists only on YouTube), the Virus Breach and ASL gesture detector projects (with demo clips), the Virus Breach GitHub and YouTube demo links, and the SFU Kendo - Mask Off video.
 
 **Hidden until launch** (`hidden: true` in the content file; the sections skip these, but the data stays so it is easy to restore):
 
@@ -93,7 +93,7 @@ scripts/           make-icons.mjs (generates the favicon, app icons and link-pre
 - Name, intro, location, email, links, about text/photo, contact line, and nav entries live in `src/content/site.ts`.
 - Clips and posters go in `public/videos/` (referenced as `/videos/<file>`); photos and thumbnails go in `public/images/`.
 - Adding a project must only require editing `projects.ts` and adding media. If a change would force a component edit to add a project, the component is wrong.
-- Optional fields (`github`, `live`, `demo`, `video`) hide their UI when undefined. `demo` is a full YouTube URL shown as a "Demo" button with the YouTube icon, opening in a new tab. `note` is a short muted line shown beside the link buttons (e.g. "Code available on request"); it renders on its own if there are no buttons.
+- Optional fields (`github`, `live`, `demo`, `devpost`, `award`, `video`) hide their UI when undefined. `demo` is a full YouTube URL shown as a "Demo" button with the YouTube icon, opening in a new tab. `devpost` is a Devpost page shown as a "Devpost" button. `award` is a short line (e.g. "SURGE Prize Track Winner · Fall Hacks 2026") shown as a `bg-brand` badge with a trophy above the title on the card and in the dialog. `note` is a short muted line shown beside the link buttons (e.g. "Code available on request"); it renders on its own if there are no buttons.
 - `hidden: true` on a project or video keeps it in the file but removes it from the page.
 - YouTube IDs: only the 11-character ID after `v=` (stop before any `&`). Keep a leading `-` or `_`; dropping it makes the video fail to load.
 

@@ -17,6 +17,10 @@ export type Project = {
   live?: string;
   /** Full YouTube demo URL. Leave undefined to hide the button. */
   demo?: string;
+  /** Devpost (hackathon) page URL. Leave undefined to hide the button. */
+  devpost?: string;
+  /** Short award line shown as an accent badge, e.g. "Winner · Some Hackathon 2026". */
+  award?: string;
   /** Short muted line shown with the links, e.g. "Code available on request". */
   note?: string;
   /** Keep the entry in this file but don't show it on the site (e.g. until its links are ready). */
@@ -25,6 +29,17 @@ export type Project = {
 
 // Placeholder entries: replace with real projects.
 export const projects: Project[] = [
+  {
+    title: "FridgeMates",
+    description: "An iPhone app that logs your whole fridge from one photo. Gemini identifies and counts each item and estimates expiry dates, so you know what to eat first.",
+    tags: ["React Native", "Expo", "TypeScript", "Gemini"],
+    poster: "/videos/fridgemates-thumbnail.jpg",
+    github: "https://github.com/Rainier-Ordinario/FridgeMates",
+    demo: "https://www.youtube.com/watch?v=XU6VGoLsIII",
+    devpost: "https://devpost.com/software/fridgemates",
+    award: "SURGE Prize Track Winner · Fall Hacks 2026",
+    // No live link: it is a native iPhone app.
+  },
   {
     title: "Virus Breach",
     description: "A 2D tile-based hacking game built with JavaFX. Navigate the board, collect data, find the decryption key, and escape through the exit while avoiding firewalls and the antivirus enemy.",
