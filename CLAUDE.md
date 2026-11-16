@@ -22,9 +22,11 @@ The site is **live at https://www.kennethsetiadharma.com** (Vercel, repo `kennet
 
 Redesign checked locally on 2026-11-15 (production build): no console errors on desktop or a 390px phone; the reel, in-view project clips, Kendo YouTube lightbox and reduced-motion fallbacks all work. Lighthouse mobile 95 to 99 / 100 / 96 / 100 over several runs (simulated LCP 2.3 to 2.9 s, TBT 10 ms; with applied throttling LCP is 1.6 s), desktop 99 / 100 / 96 / 100. Best practices is 96 only because the Vercel Analytics script 404s on localhost. Total built JavaScript went from 1,892 KB to about 850 KB (uncompressed) with three.js gone.
 
-**Draft copy to confirm** (written during the redesign; search `src/content/` for `TODO confirm`): the hero `intro`, `about.statement`, and each project's `headline` / `role` / `outcome`. `about.facts` (school, what you are looking for) is empty and hidden until filled in. The ASL project has no `role` or `outcome` yet. The hero reel is a placeholder cut from the two project demos: replace `public/videos/reel.mp4` and `reel-poster.webp` with a real showreel.
+**Draft copy to confirm** (written during the redesign; search `src/content/` for `TODO confirm`): the hero `intro`, `about.statement`, and each project's `headline` / `role` / `outcome`. The ASL project has no `role` or `outcome` yet. `about.facts` (school, what you are looking for) is real; an empty list hides the row.
 
-**Real content in place:** name, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the FridgeMates project (hackathon winner; logo poster, GitHub, YouTube demo, Devpost, award badge; no clip, the demo exists only on YouTube, so its row shows a still: a short screen recording would help it most), the Virus Breach and ASL gesture detector projects (with demo clips), the Virus Breach GitHub and YouTube demo links, and the SFU Kendo - Mask Off video.
+**Hero reel:** a 16 s, 1920x1080 cut: the opening b-roll of the SFU Kendo video (7 s), then 3 s each of the FridgeMates ad, Virus Breach and the ASL demo. To recut it, see "Media workflow".
+
+**Real content in place:** name, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the FridgeMates project (hackathon winner; logo poster, the 51 s ad as its clip, GitHub, YouTube demo, Devpost, award badge), the Virus Breach and ASL gesture detector projects (with demo clips), the Virus Breach GitHub and YouTube demo links, and the SFU Kendo - Mask Off video.
 
 **Hidden until launch** (`hidden: true` in the content file; the sections skip these, but the data stays so it is easy to restore):
 
@@ -40,7 +42,7 @@ To show one: replace its placeholder content, then delete its `hidden: true` lin
 - Virus Breach: no `live` (it is a desktop game). It has `github` (`kennethsetiadharma/virus-breach`) and `demo` (YouTube video).
 - ASL gesture detector: no `github` yet, so it shows `note: "Code available on request"` instead. When the repo URL is known, set `github` and delete the `note` line (and its `TODO`).
 
-**Still to do:** the draft copy and placeholder reel above, the hidden entries and the ASL `github` link. After any change to the share image, re-scrape it with LinkedIn's Post Inspector, since previews are cached. Check `src/content/*.ts` for leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
+**Still to do:** the draft copy above, the hidden entries and the ASL `github` link. After any change to the share image, re-scrape it with LinkedIn's Post Inspector, since previews are cached. Check `src/content/*.ts` for leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
 
 ## Stack
 
@@ -119,7 +121,9 @@ scripts/           make-icons.mjs (generates the favicon, app icons and link-pre
 ## Media workflow
 
 - **Project demo clips:** H.264 MP4, about 1280×720, roughly 1.5–2 Mbps, a few MB (aim for under about 8 MB), muted is fine. Make it **fast-start** (the `moov` index before `mdat`) so it can play before it fully downloads. Posters are JPEGs under about 0.5 MB, 16:9 for both project rows and video thumbnails (they crop to it).
-- **Hero reel:** `public/videos/reel.mp4` (muted, 1280×720, about 1.5 Mbps, 10 to 15 s, a few MB) plus `reel-poster.webp`, its first frame (make it with `sharp`, which ships with Next: `sharp(src).webp({ quality: 72 })`). Keep the file names, or change `site.hero`.
+- **Hero reel:** `public/videos/reel.mp4` (muted, 1920×1080, recorded at 3 Mbps, about 16 s, 3.9 MB) plus `reel-poster.webp`, its first frame at 1280 wide (make it with `sharp`, which ships with Next: `sharp(src).resize(1280).webp({ quality: 72 })`, about 45 KB). Keep the file names, or change `site.hero`. Cut it from the originals, not from the compressed site clips.
+- **Originals live outside the repo** in `~/Documents/Videos/`: `MASK OFF SFU KENDO FINAL CUT.mp4` (1080p), `FridgeMates_ad.mp4` (1080p), `virusbreachdemo.mov` (2940×1650). There is no original for the ASL demo; the site clip (1364×768) is the best copy. To re-encode in Chrome the dev server has to serve the file, so copy it into a temporary untracked folder under `public/` and delete it afterwards.
+- A clip that is already small (the FridgeMates ad is 6.4 MB at 1080p) only needs the fast-start step, no re-encode.
 - **No ffmpeg on this Mac, and the Swift toolchain is broken** (`SwiftBridging` module redefinition). `avconvert` works but its presets are too high-bitrate (a 21 s clip came out at 25 MB). What worked: re-encode in Chrome via the Playwright MCP (play the file onto a 1280×720 canvas, record with `MediaRecorder` as `video/mp4;codecs=avc1` at a chosen `videoBitsPerSecond`, then save it with `download.saveAs`). Several clips can be cut into one file by pausing the recorder between seeks; the result is a fragmented MP4 with `moov` already first. For a normal MP4, fast-start with a small Python script that moves `moov` and shifts the `stco`/`co64` offsets (lossless). Posters: grab a frame with a canvas, or `sips -s format jpeg -Z 1600` for PNGs.
 - Don't commit raw source recordings or huge originals (GitHub rejects files over 100 MB). Big photos are fine to keep but resize if convenient (Next optimises them at request time).
 - Keep file-name capitalisation identical everywhere (`.JPG` vs `.jpg`); some hosts are case-sensitive.

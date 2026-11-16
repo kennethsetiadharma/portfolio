@@ -42,6 +42,7 @@ export const projects: Project[] = [
     role: "One of 3 developers, built at SFU Fall Hacks 2026", // TODO confirm: say which part was yours
     description: "An iPhone app that logs your whole fridge from one photo. Gemini identifies and counts each item and estimates expiry dates, so you know what to eat first.",
     tags: ["React Native", "Expo", "TypeScript", "Gemini"],
+    video: "/videos/fridgemates-demo.mp4",
     poster: "/videos/fridgemates-thumbnail.jpg",
     github: "https://github.com/Rainier-Ordinario/FridgeMates",
     demo: "https://www.youtube.com/watch?v=XU6VGoLsIII",
