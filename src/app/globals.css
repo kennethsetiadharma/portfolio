@@ -62,7 +62,8 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  /* Darker than the shadcn default so muted text passes contrast (4.5:1) on the grey page. */
+  --muted-foreground: oklch(0.5 0 0);
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
@@ -120,15 +121,29 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Near-black section (Videos, footer). Put it on a full-width wrapper: everything
+   inside picks up the swapped tokens, so buttons, muted text and borders invert. */
+.section-dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --ring: oklch(0.556 0 0);
+  background: var(--background);
+  color: var(--foreground);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
     @apply text-foreground;
-    /* Light grey gradient, darker at the top like a studio backdrop. */
-    background: linear-gradient(to bottom, oklch(0.88 0 0), oklch(0.97 0 0) 70%);
-    background-attachment: fixed;
+    /* Flat light grey, so dark sections (below) meet it with a clean edge. */
+    background: oklch(0.96 0 0);
   }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;

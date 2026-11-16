@@ -7,7 +7,7 @@ export function About() {
   const { photo, photoAlt, text } = site.about;
 
   return (
-    <Section id="about" title="About">
+    <Section id="about" eyebrow="About">
       <div className="grid items-center gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-16">
         <Reveal>
           <Image

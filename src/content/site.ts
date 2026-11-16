@@ -29,5 +29,10 @@ export const site = {
       "Outside of code, I film and edit videos.",
     ],
   },
+  /** Section headings: a small label over a large statement. */
+  sections: {
+    work: { eyebrow: "Work", title: "Things I’ve built." },
+    videos: { eyebrow: "Videos", title: "Things I’ve cut." },
+  },
   contact: "Want to work together? Say hello.",
 } as const;
