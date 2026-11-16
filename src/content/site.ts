@@ -5,9 +5,15 @@ const email = "kenneth.setiadharma@gmail.com";
 
 export const site = {
   name: "Kenneth Setiadharma",
-  intro: "CS student building things for the web.",
+  // TODO confirm: drafted line, edit freely.
+  intro: "CS student at SFU. I build apps and cut films.",
   /** Shown under the intro in the hero. */
   location: "Based in Burnaby, BC",
+  /** Hero showreel: a short muted clip and its first frame. Replace both files to change it. */
+  hero: {
+    reel: "/videos/reel.mp4",
+    poster: "/videos/reel-poster.webp",
+  },
   /** Shown as text in the footer; the mailto link below is built from it. */
   email,
   links: {

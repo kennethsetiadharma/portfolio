@@ -1,25 +1,21 @@
-import { HeroVisual } from "@/components/three/HeroVisual";
+import { HeroReel } from "@/components/HeroReel";
 import { SocialLinks } from "@/components/SocialLinks";
 import { site } from "@/content/site";
 
 export function Hero() {
   return (
-    <section className="flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-12 text-center">
-      <HeroVisual className="h-[44vh] w-full max-w-xl" />
-      <h1 className="text-[clamp(3rem,9.5vw,9rem)] font-medium leading-none tracking-tighter">
-        {site.name}
-      </h1>
-      <p className="mt-6 max-w-md text-lg text-muted-foreground">
-        {site.intro}
-      </p>
-      <p className="mt-2 text-muted-foreground">{site.location}</p>
-      <a
-        href={site.links.email}
-        className="mt-1 text-muted-foreground transition-colors hover:text-foreground"
-      >
-        {site.email}
-      </a>
-      <SocialLinks className="mt-8" />
+    <section>
+      <div className="flex flex-col items-center px-6 pt-32 text-center md:pt-36">
+        <h1 className="text-[clamp(3rem,9.5vw,9rem)] leading-none font-medium tracking-tighter">
+          {site.name}
+        </h1>
+        <p className="mt-6 max-w-md text-lg text-foreground/80 md:text-xl">
+          {site.intro}
+        </p>
+        <p className="mt-2 text-muted-foreground">{site.location}</p>
+        <SocialLinks className="mt-8" />
+      </div>
+      <HeroReel src={site.hero.reel} poster={site.hero.poster} />
     </section>
   );
 }

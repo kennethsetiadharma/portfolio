@@ -136,6 +136,46 @@
   color: var(--foreground);
 }
 
+/* Hero showreel. `--p` (0 to 1) is the scroll progress set by HeroReel: the frame
+   grows from `--from` to full width and its corners square off. From 768px up it
+   pins to the screen while the track scrolls past. Reduced motion: a plain
+   rounded frame, no scaling or pinning. */
+.reel-frame {
+  --from: 0.9;
+  aspect-ratio: 16 / 9;
+  transform-origin: top center;
+  transform: scale(calc(var(--from) + (1 - var(--from)) * var(--p, 0)));
+  clip-path: inset(0 round calc((1 - var(--p, 0)) * 2rem));
+  will-change: transform;
+}
+@media (min-width: 768px) {
+  .reel-track {
+    height: 140vh;
+  }
+  .reel-frame {
+    --from: 0.72;
+    position: sticky;
+    top: 0;
+    aspect-ratio: auto;
+    height: 100vh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel-track {
+    height: auto;
+    padding-inline: 1.5rem;
+  }
+  .reel-frame {
+    position: static;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    max-width: 72rem;
+    margin-inline: auto;
+    transform: none;
+    clip-path: inset(0 round 2rem);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
