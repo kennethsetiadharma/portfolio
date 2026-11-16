@@ -3,13 +3,19 @@
 
 export type Project = {
   title: string;
-  /** One line. Keep it short. */
+  /** The big line: what it does for someone, in a few words. Falls back to the title. */
+  headline?: string;
+  /** One or two sentences. Keep it short. */
   description: string;
+  /** Your part in it, e.g. "One of 3 developers". Leave undefined to hide. */
+  role?: string;
+  /** What came of it, e.g. a result or number. Leave undefined to hide. */
+  outcome?: string;
   /** 2–4 tags. */
   tags: string[];
-  /** Short, muted, looping clip, e.g. "/videos/my-project.mp4". */
+  /** Short, muted, looping clip that plays when the project scrolls into view, e.g. "/videos/my-project.mp4". */
   video?: string;
-  /** Still frame shown before the video loads, or instead of it, e.g. "/videos/my-project.jpg". */
+  /** 16:9 still shown before the clip loads, or instead of it, e.g. "/videos/my-project.jpg". */
   poster: string;
   /** Leave undefined to hide the button. */
   github?: string;
@@ -27,10 +33,13 @@ export type Project = {
   hidden?: boolean;
 };
 
-// Placeholder entries: replace with real projects.
+// `headline`, `role` and `outcome` below are drafts written from the READMEs:
+// search for "TODO confirm" and edit or delete each one.
 export const projects: Project[] = [
   {
     title: "FridgeMates",
+    headline: "Your whole fridge, logged from one photo.", // TODO confirm
+    role: "One of 3 developers, built at SFU Fall Hacks 2026", // TODO confirm: say which part was yours
     description: "An iPhone app that logs your whole fridge from one photo. Gemini identifies and counts each item and estimates expiry dates, so you know what to eat first.",
     tags: ["React Native", "Expo", "TypeScript", "Gemini"],
     poster: "/videos/fridgemates-thumbnail.jpg",
@@ -42,6 +51,9 @@ export const projects: Project[] = [
   },
   {
     title: "Virus Breach",
+    headline: "Break in, grab the key, get out.", // TODO confirm
+    role: "One of 4 developers, CMPT 276 at SFU", // TODO confirm: say which part was yours
+    outcome: "Unit-tested with JUnit, coverage tracked with JaCoCo", // TODO confirm
     description: "A 2D tile-based hacking game built with JavaFX. Navigate the board, collect data, find the decryption key, and escape through the exit while avoiding firewalls and the antivirus enemy.",
     tags: ["Java", "Maven", "JavaFX"],
     video: "/videos/virusbreach-demo.mp4",
@@ -52,7 +64,9 @@ export const projects: Project[] = [
   },
   {
     title: "Real-Time ASL Hand Gesture Detector",
-    description: "A real-time hand gesture recognition system using Python, OpenCV, cvzone, and TensorFlow/Keras",
+    headline: "Reads hand signs live from a webcam.", // TODO confirm
+    description: "A real-time hand gesture recognition system using Python, OpenCV, cvzone, and TensorFlow/Keras.",
+    // TODO role / outcome: I had nothing to draft these from (solo or team? accuracy? number of signs?).
     tags: ["Python", "OpenCV", "cvzone", "TensorFlow/Keras"],
     video: "/videos/aslgesturedemo.mp4",
     poster: "/videos/aslgesturedemo-poster.jpg",
