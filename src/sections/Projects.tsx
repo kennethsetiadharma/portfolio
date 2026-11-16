@@ -1,21 +1,21 @@
-import { Stagger, StaggerItem } from "@/components/motion/Stagger";
-import { ProjectCard } from "@/components/ProjectCard";
+import { Reveal } from "@/components/motion/Reveal";
+import { ProjectRow } from "@/components/ProjectRow";
 import { Section } from "@/components/Section";
-import { site } from "@/content/site";
 import { projects } from "@/content/projects";
+import { site } from "@/content/site";
 
 export function Projects() {
   return (
     <Section id="work" {...site.sections.work}>
-      <Stagger className="grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+      <div className="space-y-24 md:space-y-36">
         {projects
           .filter((project) => !project.hidden)
-          .map((project) => (
-            <StaggerItem key={project.title}>
-              <ProjectCard project={project} />
-            </StaggerItem>
+          .map((project, i) => (
+            <Reveal key={project.title}>
+              <ProjectRow project={project} flip={i % 2 === 1} />
+            </Reveal>
           ))}
-      </Stagger>
+      </div>
     </Section>
   );
 }
