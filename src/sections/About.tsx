@@ -1,35 +1,36 @@
 import Image from "next/image";
-import { Reveal } from "@/components/motion/Reveal";
-import { Section } from "@/components/Section";
+import { ScrollWords } from "@/components/motion/ScrollWords";
 import { site } from "@/content/site";
 
 export function About() {
-  const { photo, photoAlt, text } = site.about;
+  const { photo, photoAlt, statement, facts } = site.about;
 
   return (
-    <Section id="about" eyebrow="About">
-      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-16">
-        <Reveal>
+    <section id="about">
+      <ScrollWords
+        text={statement}
+        media={
           <Image
             src={photo}
             alt={photoAlt}
-            width={800}
-            height={1000}
-            sizes="(min-width: 768px) 40vw, 100vw"
-            className="mx-auto aspect-[4/5] w-full max-w-[15rem] rounded-3xl object-cover md:mx-0 md:max-w-sm"
+            width={640}
+            height={800}
+            sizes="16rem"
+            className="aspect-[4/5] w-40 rounded-3xl object-cover md:w-full"
           />
-        </Reveal>
-        <Reveal delay={0.1} className="space-y-5">
-          {text.map((paragraph) => (
-            <p
-              key={paragraph}
-              className="text-xl leading-snug tracking-tight text-foreground/80 md:text-2xl"
-            >
-              {paragraph}
-            </p>
-          ))}
-        </Reveal>
-      </div>
-    </Section>
+        }
+      >
+        {facts.length > 0 && (
+          <dl className="mt-10 flex flex-wrap gap-x-12 gap-y-4">
+            {facts.map(({ label, value }) => (
+              <div key={label}>
+                <dt className="text-sm text-muted-foreground">{label}</dt>
+                <dd className="mt-1 text-lg font-medium tracking-tight">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+      </ScrollWords>
+    </section>
   );
 }

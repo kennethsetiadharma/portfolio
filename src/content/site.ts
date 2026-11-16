@@ -30,10 +30,16 @@ export const site = {
   about: {
     photo: "/images/kenneth.JPG",
     photoAlt: "Portrait of Kenneth Setiadharma",
-    text: [
-      "A CS student building fast and cool things for the web",
-      "Outside of code, I film and edit videos.",
-    ],
+    // TODO confirm: drafted line, edit freely. It lights up word by word on scroll.
+    statement:
+      "I build software people can pick up and use, and I edit video so the story lands.",
+    /**
+     * Short facts shown under the statement; leave the list empty to hide it.
+     * TODO: fill these in and uncomment, e.g.
+     *   { label: "Studying", value: "Computing Science, SFU" },
+     *   { label: "Looking for", value: "Co-op, Summer 2027" },
+     */
+    facts: [] as { label: string; value: string }[],
   },
   /** Section headings: a small label over a large statement. */
   sections: {
