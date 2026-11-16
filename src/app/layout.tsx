@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { Nav } from "@/components/Nav";
 import { site } from "@/content/site";
+import { siteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,14 +20,6 @@ const geistMono = Geist_Mono({
   preload: false,
 });
 
-// Absolute base URL for the share image. On Vercel this is the production domain, so it
-// follows you automatically when you add a custom domain. Set NEXT_PUBLIC_SITE_URL to override.
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "http://localhost:3000");
-
 const description = `${site.intro} ${site.location}.`;
 
 // The favicon, app icon and link-preview images are the files in this folder
@@ -35,6 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: site.name,
   description,
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     siteName: site.name,
