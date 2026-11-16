@@ -24,7 +24,7 @@ Redesign checked locally on 2026-11-15 (production build): no console errors on 
 
 **Draft copy to confirm** (written during the redesign; search `src/content/` for `TODO confirm`): the hero `intro`, `about.statement`, and each project's `headline` / `role` / `outcome`. The ASL project has no `role` or `outcome` yet. `about.facts` (school, what you are looking for) is real; an empty list hides the row.
 
-**Hero reel:** a 16 s, 1920x1080 cut: the opening b-roll of the SFU Kendo video (7 s), then 3 s each of the FridgeMates ad, Virus Breach and the ASL demo. To recut it, see "Media workflow".
+**Hero reel:** a 13 s, 1920x1080, 3.4 MB cut: the opening b-roll of the SFU Kendo video (7 s), then 3 s each of Virus Breach and the ASL demo. A FridgeMates segment was tried and removed on 2026-11-15: Kenneth felt the ad's cream title cards looked out of place next to the footage ("for now", so it can come back if it fits better). To recut it, see "Recutting the hero reel".
 
 **Real content in place:** name, "Based in Burnaby, BC", email, portrait, resume PDF, GitHub and LinkedIn links, the FridgeMates project (hackathon winner; logo poster, the 51 s ad as its clip, GitHub, YouTube demo, Devpost, award badge), the Virus Breach and ASL gesture detector projects (with demo clips), the Virus Breach GitHub and YouTube demo links, and the SFU Kendo - Mask Off video.
 
@@ -43,6 +43,37 @@ To show one: replace its placeholder content, then delete its `hidden: true` lin
 - ASL gesture detector: no `github` yet, so it shows `note: "Code available on request"` instead. When the repo URL is known, set `github` and delete the `note` line (and its `TODO`).
 
 **Still to do:** the draft copy above, the hidden entries and the ASL `github` link. After any change to the share image, re-scrape it with LinkedIn's Post Inspector, since previews are cached. Check `src/content/*.ts` for leftover placeholder text (search for `example.com`, `dQw4w9WgXcQ`, `TODO`).
+
+## Direction (read before proposing design changes)
+
+This is where the November 2026 redesign was heading and what Kenneth said along the way. Treat his words as the brief; the rest is how it was interpreted.
+
+**What he asked for.** He liked that the site was clean but found the 3D die and the site overall "not too impressive". He wanted it to be "really shocking but comprehensive as it is", without sacrificing much performance, borrowing Apple's design principles, and he gave permission to be "a bit more aggressive" because he wanted "pretty big improvements".
+
+**Decisions he made** (asked directly, 2026-11-15):
+
+- Hero: drop the die and three.js for a muted showreel that expands on scroll. (Rejected: rebuilding the die as a nicer 3D object; a type-only hero.)
+- Theme: alternating light and dark sections. (Rejected: all dark; staying all light.)
+- Copy: Claude drafts headlines, roles and results; he edits them.
+- Reel: he likes the opening b-roll of the Kendo video and wants it kept; the rest of the cut was left to discretion. He asked for the reel to be higher quality where possible, which is why it is 1080p and cut from originals.
+- Commits: separate, organised commits in the existing style (see `git log`).
+
+**How that was interpreted** (Claude's calls, open to change):
+
+- "Apple principles" = one idea per screen, very large type, media as the hero, scroll-driven reveals that use only transform/opacity/clip-path, generous space, restrained colour.
+- The work is the product. Anything that pushes projects down or makes them smaller is going the wrong way; this is why the die went and the project grid became full-width rows with clips that play in place.
+- His video editing is the thing most CS portfolios can't show, so real footage leads the page.
+- Performance and accessibility scores are part of the brief, not a nice-to-have: keep Lighthouse mobile performance at 95 or better and accessibility at 100, and measure after any change to the hero.
+
+**Good next steps**, roughly in order of value:
+
+1. Confirm or rewrite the draft copy (`TODO confirm` in `src/content/`), especially each project's `role`: say what Kenneth himself built.
+2. A longer, purpose-made showreel with more of his edits. More videos in `videos.ts` (two placeholders are hidden) would also fill out the Videos section.
+3. A phone-frame treatment for app projects like FridgeMates, if real screenshots or a portrait screen recording are available. Not built yet; the `Project` type has no field for it.
+4. The ASL project's `github` link, `role` and `outcome`, and a better-quality demo recording (the only copy is 768p).
+5. The hidden Group Consensus App entry.
+
+**Tried and dropped, so don't re-propose without a new reason:** a larger first project row (FridgeMates had only a logo then; it has a clip now, so this could be revisited); very faint unlit words in the About sentence (fails contrast); the FridgeMates ad inside the reel; automatic system dark mode (fights the light/dark section rhythm); delaying the reel video after the poster (no measurable gain).
 
 ## Stack
 
@@ -77,7 +108,7 @@ src/
   lib/              utils.ts (cn), site-url.ts (absolute site URL for metadata, robots, sitemap)
 public/videos/      hero reel + poster, code-project clips + posters, local video-project mp4s
 public/images/      your portrait (path set in site.about.photo), video-project thumbnails (images/videos/), die-static.webp (source of the favicon and share images)
-scripts/           make-icons.mjs (generates the favicon, app icons and link-preview images from the static die image)
+scripts/           make-icons.mjs (favicon, app icons and link-preview images from the static die image), make-reel.playwright.js + finish-reel.mjs (record and install the hero reel), faststart.py (lossless MP4 fast-start)
 ```
 
 ## Content convention
@@ -121,13 +152,36 @@ scripts/           make-icons.mjs (generates the favicon, app icons and link-pre
 ## Media workflow
 
 - **Project demo clips:** H.264 MP4, about 1280×720, roughly 1.5–2 Mbps, a few MB (aim for under about 8 MB), muted is fine. Make it **fast-start** (the `moov` index before `mdat`) so it can play before it fully downloads. Posters are JPEGs under about 0.5 MB, 16:9 for both project rows and video thumbnails (they crop to it).
-- **Hero reel:** `public/videos/reel.mp4` (muted, 1920×1080, recorded at 3 Mbps, about 16 s, 3.9 MB) plus `reel-poster.webp`, its first frame at 1280 wide (make it with `sharp`, which ships with Next: `sharp(src).resize(1280).webp({ quality: 72 })`, about 45 KB). Keep the file names, or change `site.hero`. Cut it from the originals, not from the compressed site clips.
-- **Originals live outside the repo** in `~/Documents/Videos/`: `MASK OFF SFU KENDO FINAL CUT.mp4` (1080p), `FridgeMates_ad.mp4` (1080p), `virusbreachdemo.mov` (2940×1650). There is no original for the ASL demo; the site clip (1364×768) is the best copy. To re-encode in Chrome the dev server has to serve the file, so copy it into a temporary untracked folder under `public/` and delete it afterwards.
-- A clip that is already small (the FridgeMates ad is 6.4 MB at 1080p) only needs the fast-start step, no re-encode.
-- **No ffmpeg on this Mac, and the Swift toolchain is broken** (`SwiftBridging` module redefinition). `avconvert` works but its presets are too high-bitrate (a 21 s clip came out at 25 MB). What worked: re-encode in Chrome via the Playwright MCP (play the file onto a 1280×720 canvas, record with `MediaRecorder` as `video/mp4;codecs=avc1` at a chosen `videoBitsPerSecond`, then save it with `download.saveAs`). Several clips can be cut into one file by pausing the recorder between seeks; the result is a fragmented MP4 with `moov` already first. For a normal MP4, fast-start with a small Python script that moves `moov` and shifts the `stco`/`co64` offsets (lossless). Posters: grab a frame with a canvas, or `sips -s format jpeg -Z 1600` for PNGs.
+- **Originals live outside the repo** in `~/Documents/Videos/`: `MASK OFF SFU KENDO FINAL CUT.mp4` (1080p, 42 s), `FridgeMates_ad.mp4` (1080p, 51 s), `virusbreachdemo.mov` (2940×1650, 21 s). There is no original for the ASL demo; the site clip `public/videos/aslgesturedemo.mp4` (1364×768) is the best copy. If a file is missing, ask Kenneth rather than cutting from the compressed site clips.
+- A clip that is already small (the FridgeMates ad is 6.4 MB at 1080p) only needs the fast-start step, no re-encode: `python3 scripts/faststart.py in.mp4 out.mp4`.
+- **No ffmpeg on this Mac, and the Swift toolchain is broken** (`SwiftBridging` module redefinition). `avconvert` works but its presets are too high-bitrate (a 21 s clip came out at 25 MB). What worked: re-encode in Chrome via the Playwright MCP (play the file onto a 1280×720 canvas, record with `MediaRecorder` as `video/mp4;codecs=avc1` at a chosen `videoBitsPerSecond`, then save it with `download.saveAs`). Several clips can be cut into one file by pausing the recorder between seeks; the result is a fragmented MP4 with `moov` already first. For a normal MP4, fast-start with `scripts/faststart.py`, which moves `moov` to the front and shifts the `stco`/`co64` offsets (lossless). Posters: grab a frame with a canvas, or `sips -s format jpeg -Z 1600` for PNGs.
 - Don't commit raw source recordings or huge originals (GitHub rejects files over 100 MB). Big photos are fine to keep but resize if convenient (Next optimises them at request time).
 - Keep file-name capitalisation identical everywhere (`.JPG` vs `.jpg`); some hosts are case-sensitive.
 - **Stale image gotcha:** if you overwrite an image under the same filename, the dev server can keep serving the old resized copy from memory. Restart `npm run dev`, or use a new filename.
+
+## Recutting the hero reel
+
+The reel is `public/videos/reel.mp4` plus `public/videos/reel-poster.webp` (its first frame, the page's LCP image). Paths are set in `site.hero`. The whole recipe is two scripts, and it takes a couple of minutes:
+
+1. **Stage the sources.** The recorder runs in Chrome, so the dev server must be able to serve each source. Copy the originals into `public/_raw/` (git-ignored) under the names the script expects:
+   ```sh
+   mkdir -p public/_raw
+   cp "$HOME/Documents/Videos/MASK OFF SFU KENDO FINAL CUT.mp4" public/_raw/kendo.mp4
+   cp "$HOME/Documents/Videos/virusbreachdemo.mov" public/_raw/vb.mov
+   ```
+2. **Edit the cut.** `SEGMENTS` at the top of `scripts/make-reel.playwright.js` is the edit list: `[url, start second, length in seconds]`, played in order with hard cuts. The current cut is Kendo 0.15 to 7.05 s, Virus Breach 5 to 8 s, ASL 10 to 13 s. To find good moments in a source, draw frames every second or two onto small canvases in a page and screenshot that contact sheet.
+3. **Record.** Start `npm run dev`, then call the Playwright MCP tool `browser_run_code_unsafe` with `filename: "scripts/make-reel.playwright.js"`. It records in real time (about as long as the reel) and writes `public/_raw/reel.mp4` and `reel-poster.png`.
+4. **Install.** `node scripts/finish-reel.mjs` copies the reel into `public/videos/` and writes the 1280px WebP poster.
+5. **Check.** Reload the page: the reel should autoplay under the name, and the poster must match the first frame (otherwise there is a visible jump when the video fades in). Scrub the video to each cut. Then run Lighthouse on a production build if the file got noticeably bigger.
+6. **Clean up.** `rm -r public/_raw`. Never commit the originals (the Kendo file is 65 MB).
+
+Things to know:
+
+- Keep it muted, around 10 to 16 s, and under about 5 MB. It autoplays for everyone except reduced-motion and data-saver visitors. Requesting 3 Mbps gives roughly 2 Mbps in practice.
+- Sources are scaled to cover 1920×1080 and centre-cropped, so anything that isn't 16:9 loses its edges.
+- Kenneth's preferences so far: open on the Kendo b-roll; no FridgeMates ad in the reel.
+- The file is a fragmented MP4 with `moov` first, so it needs no fast-start step. Its duration can read as `Infinity` until the browser has seen the end; `loop` still works.
+- Chrome plays the `.mov` screen recording directly (it is H.264). `process` and Node APIs are not available inside `browser_run_code_unsafe`, and it can only save files under the project folder.
 
 ## Decisions and gotchas
 

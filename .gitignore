@@ -40,3 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .playwright-mcp/
+
+# temporary copies of original videos for re-encoding (see CLAUDE.md, "Recutting the hero reel")
+/public/_raw/
