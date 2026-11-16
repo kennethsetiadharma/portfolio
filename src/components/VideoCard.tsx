@@ -12,7 +12,8 @@ import { VideoPlayer } from "@/components/VideoPlayer";
 import type { VideoProject } from "@/content/videos";
 
 // Static thumbnail in the grid; clicking opens a focused lightbox with the player.
-export function VideoCard({ video }: { video: VideoProject }) {
+// `feature` is the large version used for the first video in the section.
+export function VideoCard({ video, feature }: { video: VideoProject; feature?: boolean }) {
   const { title, thumbnail } = video;
 
   return (
@@ -23,10 +24,23 @@ export function VideoCard({ video }: { video: VideoProject }) {
         width={1280}
         height={720}
         aspectClass="aspect-video"
-        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+        sizes={
+          feature
+            ? "(min-width: 1152px) 1104px, 100vw"
+            : "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+        }
         Icon={Play}
+        feature={feature}
       />
-      <p className="mt-4 text-lg font-medium tracking-tight">{title}</p>
+      <p
+        className={
+          feature
+            ? "mt-6 text-2xl font-medium tracking-tight md:text-3xl"
+            : "mt-4 text-lg font-medium tracking-tight"
+        }
+      >
+        {title}
+      </p>
 
       {/* The X sits in the title row, not over the player: embeds put their own
           controls in the top-right corner. */}

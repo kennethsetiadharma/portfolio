@@ -16,6 +16,7 @@ export function ThumbTrigger({
   aspectClass,
   sizes,
   Icon,
+  feature,
 }: {
   label: string;
   poster: string;
@@ -25,12 +26,15 @@ export function ThumbTrigger({
   aspectClass: string;
   sizes: string;
   Icon: LucideIcon;
+  /** Large thumbnail: bigger corners and a big centred badge that is always visible. */
+  feature?: boolean;
 }) {
   return (
     <DialogTrigger
       aria-label={label}
       className={cn(
-        "group relative block w-full cursor-pointer overflow-hidden rounded-2xl bg-muted text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+        "group relative block w-full cursor-pointer overflow-hidden bg-muted text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
+        feature ? "rounded-3xl" : "rounded-2xl",
         aspectClass,
       )}
     >
@@ -42,9 +46,15 @@ export function ThumbTrigger({
         sizes={sizes}
         className="size-full object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
       />
-      <span className="absolute right-3 bottom-3 flex size-10 translate-y-1 items-center justify-center rounded-full bg-black/75 text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 pointer-coarse:translate-y-0 pointer-coarse:opacity-100 motion-reduce:transition-none">
-        <Icon className="size-4" />
-      </span>
+      {feature ? (
+        <span className="absolute inset-0 m-auto flex size-20 items-center justify-center rounded-full bg-white/90 text-black transition-transform duration-300 group-hover:scale-110 motion-reduce:transition-none md:size-24">
+          <Icon className="size-7 fill-current md:size-8" />
+        </span>
+      ) : (
+        <span className="absolute right-3 bottom-3 flex size-10 translate-y-1 items-center justify-center rounded-full bg-black/75 text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 pointer-coarse:translate-y-0 pointer-coarse:opacity-100 motion-reduce:transition-none">
+          <Icon className="size-4" />
+        </span>
+      )}
     </DialogTrigger>
   );
 }
